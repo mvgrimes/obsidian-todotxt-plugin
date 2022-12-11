@@ -1,6 +1,6 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { createRoot } from "react-dom/client";
+import { createRoot, Root } from "react-dom/client";
+import { AppContext } from "./context";
 import { TextFileView } from "obsidian";
 import { TodoListView } from "./ui/todolist";
 
@@ -27,6 +27,7 @@ const TODO_RE = RegExp(
 
 export class CSVView extends TextFileView {
   todoData: TODO[];
+  root: Root;
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
@@ -63,6 +64,7 @@ export class CSVView extends TextFileView {
         return { description: `not parsed: ${line}` };
       }
     });
+    console.log(`[TodoTxt] setViewData:`, { todoData: this.todoData });
 
     this.refresh();
   }
@@ -72,16 +74,17 @@ export class CSVView extends TextFileView {
   }
 
   async onOpen() {
-    const root = createRoot(this.containerEl.children[1]);
-    root.render(
-      <React.StrictMode>
+    this.root = createRoot(this.containerEl.children[1]);
+    // const value = { app: this.app, todos: this.todoData };
+    this.root.render(
+      <AppContext.Provider value={this.app}>
         <TodoListView />,
-      </React.StrictMode>
+      </AppContext.Provider>
     );
   }
 
   async onClose() {
-    ReactDOM.unmountComponentAtNode(this.containerEl.children[1]);
+    this.root.unmount();
   }
 
   getViewType() {
@@ -89,6 +92,7 @@ export class CSVView extends TextFileView {
   }
 
   refresh() {
+    console.log(`[TodoTxt] refresh:`);
     // update App.context?
   }
 }

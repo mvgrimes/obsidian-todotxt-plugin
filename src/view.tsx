@@ -1,4 +1,8 @@
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { TextFileView } from "obsidian";
+import { TodoListView } from "./ui/todolist";
 
 export const VIEW_TYPE_CSV = "todotxt-view";
 export type TODO = {
@@ -23,7 +27,6 @@ const TODO_RE = RegExp(
 
 export class CSVView extends TextFileView {
   todoData: TODO[];
-  listEl: HTMLElement;
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
@@ -69,11 +72,16 @@ export class CSVView extends TextFileView {
   }
 
   async onOpen() {
-    this.listEl = this.contentEl.createEl("ul");
+    const root = createRoot(this.containerEl.children[1]);
+    root.render(
+      <React.StrictMode>
+        <TodoListView />,
+      </React.StrictMode>
+    );
   }
 
   async onClose() {
-    this.contentEl.empty();
+    ReactDOM.unmountComponentAtNode(this.containerEl.children[1]);
   }
 
   getViewType() {
@@ -81,11 +89,6 @@ export class CSVView extends TextFileView {
   }
 
   refresh() {
-    // Remove previous data.
-    this.listEl.empty();
-
-    this.todoData.forEach((todo, i) => {
-      this.listEl.createEl("li", { text: todo.description });
-    });
+    // update App.context?
   }
 }

@@ -10,26 +10,50 @@ If your plugin does not need CSS, delete this file.
 .todos {}
 
 .todos .todo {
-  margin: 0.1rem 0.2rem;
+  margin: 0.25rem 0.5rem;
 
 }
 
 .todos .todo-priority {
   margin-right: 0.25rem;
+  border-radius: 9999px;
+  padding: 1px 6px;
 }
 
-.todos .todo-priority-a {
-  color: red;
+.todos .todo-priority-a .todo-priority {
+  color: #B91C1C;
+  background-color: #FCA5A5;
 }
 
-.todos .todo-priority-b {
-  color: blue;
+.todos .todo-priority-b .todo-priority {
+  color: #FDE68A;
+  background-color: #FDBA74;
+}
+
+.todos .todo-priority-c .todo-priority {
+  color: #0284C7;
+  background-color: #93C5FD;
+}
+
+.todos .todo-completedDate {
+  margin-right: 0.25rem;
+  border-radius: 9999px;
+  padding: 1px 6px;
+  background-color: red;
+}
+
+.todos .todo-createdDate{
+  margin-right: 0.25rem;
+  border-radius: 9999px;
+  padding: 1px 6px;
+  background-color: blue;
 }
 
 .todos .todo-description {
-  /* color: green; */
+  color: #E5E7EB;
 }
 
 .todos .todo-completed .todo-description {
   text-decoration: line-through;
+  color: #9CA3AF;
 }

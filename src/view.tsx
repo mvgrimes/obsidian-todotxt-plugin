@@ -1,13 +1,13 @@
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
-import { TodoContext } from "./lib/todoContext";
 import { TextFileView } from "obsidian";
 import { TodoListView } from "./ui/todolist";
 
 export const VIEW_TYPE_CSV = "todotxt-view";
 export type TODO = {
+  id: number;
   completed: boolean;
-  completeDate?: string;
+  completedDate?: string;
   priority: string;
   createDate?: string;
   description: string;
@@ -18,9 +18,9 @@ export type TODO = {
 const TODO_RE = RegExp(
   "^" +
     "((?<completed>x) )?" +
-    "((?<completeDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?" +
     "(\\((?<priority>[A-Z])\\) )?" +
-    "((?<createDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?" +
+    "((?<firstDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?" +
+    "((?<secondDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?" +
     "(?<description>.*?)" +
     "$"
 );
@@ -31,14 +31,16 @@ export class CSVView extends TextFileView {
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
+    console.log(`[TodoTxt] getViewData`);
     return this.todoData
       .map((todo: TODO) =>
         [
-          todo.completed,
-          todo.completeDate,
-          todo.priority,
+          todo.completed ? "x" : null,
+          todo.priority && !todo.completed ? `(${todo.priority})` : null,
+          todo.completedDate,
           todo.createDate,
           todo.description,
+          todo.priority && todo.completed ? `pri:${todo.priority}` : null,
         ]
           .filter((item) => item)
           .join(" ")
@@ -48,23 +50,26 @@ export class CSVView extends TextFileView {
 
   // Convert string from disk to TODO[]
   setViewData(data: string, clear: boolean) {
+    console.log(`[TodoTxt] setViewData`);
     this.todoData = data
       .split("\n")
       .filter((line) => line)
-      .map((line) => {
+      .map((line, id) => {
         const result = TODO_RE.exec(line);
         const groups = result?.groups;
         if (groups) {
           return {
+            id,
             completed: !!groups.completed,
             priority: groups.priority ?? "",
-            createDate: groups.createDate,
-            completeDate: groups.completeDate,
+            createDate: groups.secondDate ?? groups.firstDate,
+            completedDate: groups.secondDate ? groups.firstDate : undefined,
             description: groups.description,
           };
         } else {
           console.error(`[TodoTxt] setViewData: cannot match todo`, line);
           return {
+            id,
             completed: false,
             priority: "",
             description: `not parsed: ${line}`,
@@ -92,25 +97,17 @@ export class CSVView extends TextFileView {
     return VIEW_TYPE_CSV;
   }
 
+  update(todos: TODO[]) {
+    console.log(`[TodoTxt] update`, { todos });
+    this.todoData = todos;
+    this.refresh();
+    this.requestSave();
+  }
+
   refresh() {
     console.log(`[TodoTxt] refresh:`);
-
-    const sorted = [...this.todoData].sort(sortTodo);
-
     this.root.render(
-      <TodoContext.Provider value={sorted}>
-        <TodoListView />
-      </TodoContext.Provider>
+      <TodoListView todos={this.todoData} onChange={this.update.bind(this)} />
     );
   }
-}
-
-function sortTodo(a: TODO, b: TODO) {
-  if (a.completed < b.completed) return -1;
-  if (a.completed > b.completed) return 1;
-  if ((a.priority || "X") < (b.priority || "X")) return -1;
-  if ((a.priority || "X") > (b.priority || "X")) return 1;
-  if (a.description < b.description) return -1;
-  if (a.description > b.description) return 1;
-  return 0;
 }

@@ -1,8 +1,5 @@
 import {
   App,
-  Editor,
-  MarkdownView,
-  Modal,
   Notice,
   Plugin,
   PluginSettingTab,

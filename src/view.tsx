@@ -1,14 +1,14 @@
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
-import { AppContext } from "./context";
+import { TodoContext } from "./lib/todoContext";
 import { TextFileView } from "obsidian";
 import { TodoListView } from "./ui/todolist";
 
 export const VIEW_TYPE_CSV = "todotxt-view";
 export type TODO = {
-  completed?: boolean;
+  completed: boolean;
   completeDate?: string;
-  priority?: string;
+  priority: string;
   createDate?: string;
   description: string;
 };
@@ -48,22 +48,29 @@ export class CSVView extends TextFileView {
 
   // Convert string from disk to TODO[]
   setViewData(data: string, clear: boolean) {
-    this.todoData = data.split("\n").map((line) => {
-      const result = TODO_RE.exec(line);
-      const groups = result?.groups;
-      if (groups) {
-        return {
-          completed: !!groups.completed,
-          priority: groups.priority,
-          createDate: groups.createDate,
-          completeDate: groups.completeDate,
-          description: groups.description,
-        };
-      } else {
-        console.error(`[TodoTxt] setViewData: cannot match todo`, line);
-        return { description: `not parsed: ${line}` };
-      }
-    });
+    this.todoData = data
+      .split("\n")
+      .filter((line) => line)
+      .map((line) => {
+        const result = TODO_RE.exec(line);
+        const groups = result?.groups;
+        if (groups) {
+          return {
+            completed: !!groups.completed,
+            priority: groups.priority ?? "",
+            createDate: groups.createDate,
+            completeDate: groups.completeDate,
+            description: groups.description,
+          };
+        } else {
+          console.error(`[TodoTxt] setViewData: cannot match todo`, line);
+          return {
+            completed: false,
+            priority: "",
+            description: `not parsed: ${line}`,
+          };
+        }
+      });
     console.log(`[TodoTxt] setViewData:`, { todoData: this.todoData });
 
     this.refresh();
@@ -75,12 +82,6 @@ export class CSVView extends TextFileView {
 
   async onOpen() {
     this.root = createRoot(this.containerEl.children[1]);
-    // const value = { app: this.app, todos: this.todoData };
-    this.root.render(
-      <AppContext.Provider value={this.app}>
-        <TodoListView />,
-      </AppContext.Provider>
-    );
   }
 
   async onClose() {
@@ -93,6 +94,23 @@ export class CSVView extends TextFileView {
 
   refresh() {
     console.log(`[TodoTxt] refresh:`);
-    // update App.context?
+
+    const sorted = [...this.todoData].sort(sortTodo);
+
+    this.root.render(
+      <TodoContext.Provider value={sorted}>
+        <TodoListView />
+      </TodoContext.Provider>
+    );
   }
+}
+
+function sortTodo(a: TODO, b: TODO) {
+  if (a.completed < b.completed) return -1;
+  if (a.completed > b.completed) return 1;
+  if ((a.priority || "X") < (b.priority || "X")) return -1;
+  if ((a.priority || "X") > (b.priority || "X")) return 1;
+  if (a.description < b.description) return -1;
+  if (a.description > b.description) return 1;
+  return 0;
 }

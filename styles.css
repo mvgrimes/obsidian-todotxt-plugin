@@ -6,3 +6,30 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.todos {}
+
+.todos .todo {
+  margin: 0.1rem 0.2rem;
+
+}
+
+.todos .todo-priority {
+  margin-right: 0.25rem;
+}
+
+.todos .todo-priority-a {
+  color: red;
+}
+
+.todos .todo-priority-b {
+  color: blue;
+}
+
+.todos .todo-description {
+  /* color: green; */
+}
+
+.todos .todo-completed .todo-description {
+  text-decoration: line-through;
+}

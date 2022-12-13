@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { TextFileView } from 'obsidian';
-import { TodoListView } from './ui/todolist';
+import { TodosView } from './ui/todosview';
 
 export const VIEW_TYPE_CSV = 'todotxt-view';
 export type TODO = {
@@ -90,7 +90,7 @@ export class CSVView extends TextFileView {
   refresh() {
     console.log(`[TodoTxt] refresh:`);
     this.root.render(
-      <TodoListView todos={this.todoData} onChange={this.update.bind(this)} />,
+      <TodosView todos={this.todoData} onChange={this.update.bind(this)} />,
     );
   }
 }

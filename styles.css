@@ -7,42 +7,64 @@ If your plugin does not need CSS, delete this file.
 
 */
 
-.todos {}
+.todos-view-header {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-.todos .todo {
-  margin: 0.25rem 0.5rem;
+.todos-view-header label {
+  margin-right: 0.5rem;
 
 }
 
-.todos .todo-priority {
+.todo-lists {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.todo-lists section {
+  flex-basis: 32%;
+  /* border: 1px solid #ccc; */
+}
+
+.todo {
+  margin: 0.25rem 0.5rem;
+}
+
+.todo-priority {
   margin-right: 0.25rem;
   border-radius: 9999px;
   padding: 1px 6px;
 }
 
-.todos .todo-priority-a .todo-priority {
+.todo-priority-a .todo-priority {
   color: #B91C1C;
   background-color: #FCA5A5;
 }
 
-.todos .todo-priority-b .todo-priority {
+.todo-priority-b .todo-priority {
   color: #FDE68A;
   background-color: #FDBA74;
 }
 
-.todos .todo-priority-c .todo-priority {
+.todo-priority-c .todo-priority {
   color: #0284C7;
   background-color: #93C5FD;
 }
 
-.todos .todo-completedDate {
+.todo-completedDate {
   margin-right: 0.25rem;
   border-radius: 9999px;
   padding: 1px 6px;
   background-color: red;
 }
 
-.todos .todo-createdDate{
+.todo-createdDate{
   margin-right: 0.25rem;
   border-radius: 9999px;
   padding: 1px 6px;
@@ -65,12 +87,12 @@ If your plugin does not need CSS, delete this file.
   padding: 1px 8px;
 }
 
-.todos .todo-tag {
+.todo-tag {
   color: #374151;
   background-color: #BFDBFE;
 }
 
-.todos .todo-ctx {
+.todo-ctx {
   color: #374151;
   background-color: #C7D2FE;
 }

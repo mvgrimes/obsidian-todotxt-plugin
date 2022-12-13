@@ -4,29 +4,18 @@ import cn from '../lib/classNames';
 
 type TodoListProps = {
   todos: TODO[];
-  onChange: (t: TODO[]) => void;
+  onChange: (id: number) => void;
 };
-export const TodoListView = (props: TodoListProps) => {
+export const TodoList = (props: TodoListProps) => {
   console.log(`TodoListView: `, { todos: props.todos });
   const sorted = [...props.todos].sort(sortTodo);
 
-  const handleClick = (id: number) => {
-    const newTodos = [...props.todos];
-    const todo = newTodos.find((todo) => todo.id === id) as TODO;
-    todo.completed = !todo?.completed;
-    if (todo.completed) {
-      todo.completedDate = new Date().toISOString().substring(0, 10);
-    } else {
-      todo.completedDate = undefined;
-    }
-    if (props.onChange) props.onChange(newTodos);
-
-    return newTodos;
+  const handleChange = (id: number) => {
+    if (props.onChange) props.onChange(id);
   };
 
   return (
     <div className="todos">
-      <h4>TODO List</h4>
       {sorted?.map((todo) => (
         <div
           className={cn(
@@ -46,7 +35,7 @@ export const TodoListView = (props: TodoListProps) => {
             type="checkbox"
             checked={todo.completed}
             id={`todo-${todo.id}`}
-            onChange={() => handleClick(todo.id)}
+            onChange={() => handleChange(todo.id)}
           />
           <label htmlFor={`todo-${todo.id}`}>
             <span className="todo-priority">{todo.priority}</span>

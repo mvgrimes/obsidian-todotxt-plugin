@@ -66,9 +66,11 @@ If your plugin does not need CSS, delete this file.
 }
 
 .todos .todo-tag {
-  background-color: yellow;
+  color: #374151;
+  background-color: #BFDBFE;
 }
 
 .todos .todo-ctx {
-  background-color: orange;
+  color: #374151;
+  background-color: #C7D2FE;
 }

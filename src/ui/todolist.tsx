@@ -1,6 +1,6 @@
-import * as React from "react";
-import type { TODO } from "../view";
-import cn from "../lib/classNames";
+import * as React from 'react';
+import type { TODO } from '../view';
+import cn from '../lib/classNames';
 
 type TodoListProps = {
   todos: TODO[];
@@ -30,15 +30,15 @@ export const TodoListView = (props: TodoListProps) => {
       {sorted?.map((todo) => (
         <div
           className={cn(
-            "todo",
-            todo.priority === "A"
-              ? "todo-priority-a"
-              : todo.priority === "B"
-              ? "todo-priority-b"
-              : todo.priority === "C"
-              ? "todo-priority-c"
-              : "",
-            todo.completed ? "todo-completed" : "todo-not-completed"
+            'todo',
+            todo.priority === 'A'
+              ? 'todo-priority-a'
+              : todo.priority === 'B'
+              ? 'todo-priority-b'
+              : todo.priority === 'C'
+              ? 'todo-priority-c'
+              : '',
+            todo.completed ? 'todo-completed' : 'todo-not-completed',
           )}
           key={todo.id}
         >
@@ -63,8 +63,8 @@ export const TodoListView = (props: TodoListProps) => {
 function sortTodo(a: TODO, b: TODO) {
   if (a.completed < b.completed) return -1;
   if (a.completed > b.completed) return 1;
-  if ((a.priority || "X") < (b.priority || "X")) return -1;
-  if ((a.priority || "X") > (b.priority || "X")) return 1;
+  if ((a.priority || 'X') < (b.priority || 'X')) return -1;
+  if ((a.priority || 'X') > (b.priority || 'X')) return 1;
   if (a.description < b.description) return -1;
   if (a.description > b.description) return 1;
   return 0;

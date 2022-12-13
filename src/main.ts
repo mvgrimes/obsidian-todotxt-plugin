@@ -5,9 +5,9 @@ import {
   PluginSettingTab,
   Setting,
   WorkspaceLeaf,
-} from "obsidian";
-import { CSVView, VIEW_TYPE_CSV } from "./view";
-import { readFileSync } from "fs";
+} from 'obsidian';
+import { CSVView, VIEW_TYPE_CSV } from './view';
+import { readFileSync } from 'fs';
 
 // Remember to rename these classes and interfaces!
 
@@ -16,7 +16,7 @@ interface MyPluginSettings {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  mySetting: "default",
+  mySetting: 'default',
 };
 
 export default class MyPlugin extends Plugin {
@@ -27,25 +27,25 @@ export default class MyPlugin extends Plugin {
 
     // This creates an icon in the left ribbon.
     const ribbonIconEl = this.addRibbonIcon(
-      "dice",
-      "Sample Plugin",
+      'dice',
+      'Sample Plugin',
       (evt: MouseEvent) => {
         // Called when the user clicks the icon.
-        new Notice("This is a notice!");
-      }
+        new Notice('This is a notice!');
+      },
     );
     // Perform additional things with the ribbon
-    ribbonIconEl.addClass("my-plugin-ribbon-class");
+    ribbonIconEl.addClass('my-plugin-ribbon-class');
 
     // This adds a status bar item to the bottom of the app. Does not work on mobile apps.
     const statusBarItemEl = this.addStatusBarItem();
-    statusBarItemEl.setText("Status Bar Text");
+    statusBarItemEl.setText('Status Bar Text');
 
     this.registerView(
       VIEW_TYPE_CSV,
-      (leaf: WorkspaceLeaf) => new CSVView(leaf)
+      (leaf: WorkspaceLeaf) => new CSVView(leaf),
     );
-    this.registerExtensions(["todotxt"], VIEW_TYPE_CSV);
+    this.registerExtensions(['todotxt'], VIEW_TYPE_CSV);
 
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new SampleSettingTab(this.app, this));
@@ -76,7 +76,7 @@ export default class MyPlugin extends Plugin {
     console.log(`[TodoTxt] view: `, { pwd: process?.env?.PWD });
 
     // TODO: how do we find a file in the vault
-    const todos = readFileSync("/Users/mgrimes/Notes/.todo.txt", "utf8");
+    const todos = readFileSync('/Users/mgrimes/Notes/.todo.txt', 'utf8');
     console.log(`[TodoTxt] view: `, { todos });
 
     return todos;
@@ -112,20 +112,20 @@ class SampleSettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Settings for TodoTxt plugin." });
+    containerEl.createEl('h2', { text: 'Settings for TodoTxt plugin.' });
 
     new Setting(containerEl)
-      .setName("Setting #1")
+      .setName('Setting #1')
       .setDesc("It's a secret")
       .addText((text) =>
         text
-          .setPlaceholder("Enter your secret")
+          .setPlaceholder('Enter your secret')
           .setValue(this.plugin.settings.mySetting)
           .onChange(async (value) => {
-            console.log("Secret: " + value);
+            console.log('Secret: ' + value);
             this.plugin.settings.mySetting = value;
             await this.plugin.saveSettings();
-          })
+          }),
       );
   }
 }

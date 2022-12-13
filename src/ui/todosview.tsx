@@ -71,7 +71,11 @@ export const TodosView = (props: TodosViewProps) => {
         {todoTags.map((tag) => (
           <section key={tag}>
             <h3>{tag}</h3>
-            <TodoList todos={todoLists[tag]} onChange={handleChange} />
+            <TodoList
+              tag={tag}
+              todos={todoLists[tag]}
+              onChange={handleChange}
+            />
           </section>
         ))}
       </div>

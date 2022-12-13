@@ -3,6 +3,7 @@ import type { TODO } from '../view';
 import cn from '../lib/classNames';
 
 type TodoListProps = {
+  tag: string;
   todos: TODO[];
   onChange: (id: number) => void;
 };
@@ -31,27 +32,31 @@ export const TodoList = (props: TodoListProps) => {
           )}
           key={todo.id}
         >
-          <input
-            type="checkbox"
-            checked={todo.completed}
-            id={`todo-${todo.id}`}
-            onChange={() => handleChange(todo.id)}
-          />
           <label htmlFor={`todo-${todo.id}`}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              id={`todo-${todo.id}`}
+              onChange={() => handleChange(todo.id)}
+            />
             <span className="todo-priority">{todo.priority}</span>
             {/* <span className="todo-completedDate">{todo.completedDate}</span> */}
             {/* <span className="todo-createdDate">{todo.createDate}</span> */}
-            <span className="todo-description">{todo.description}</span>
-            {todo.tags.map((tag) => (
-              <span className="todo-tag" key={tag}>
-                {tag}
-              </span>
-            ))}
-            {todo.ctx.map((ctx) => (
-              <span className="todo-ctx" key={ctx}>
-                {ctx}
-              </span>
-            ))}
+            <span>
+              <span className="todo-description">{todo.description}</span>
+              {todo.tags
+                .filter((tag) => tag !== props.tag)
+                .map((tag) => (
+                  <span className="todo-tag" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              {todo.ctx.map((ctx) => (
+                <span className="todo-ctx" key={ctx}>
+                  {ctx}
+                </span>
+              ))}
+            </span>
           </label>
         </div>
       ))}

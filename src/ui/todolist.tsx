@@ -53,6 +53,16 @@ export const TodoListView = (props: TodoListProps) => {
             {/* <span className="todo-completedDate">{todo.completedDate}</span> */}
             {/* <span className="todo-createdDate">{todo.createDate}</span> */}
             <span className="todo-description">{todo.description}</span>
+            {todo.tags.map((tag) => (
+              <span className="todo-tag" key={tag}>
+                {tag}
+              </span>
+            ))}
+            {todo.ctx.map((ctx) => (
+              <span className="todo-ctx" key={ctx}>
+                {ctx}
+              </span>
+            ))}
           </label>
         </div>
       ))}

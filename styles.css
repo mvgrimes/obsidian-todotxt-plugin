@@ -57,3 +57,18 @@ If your plugin does not need CSS, delete this file.
   text-decoration: line-through;
   color: #9CA3AF;
 }
+
+.todos .todo-tag, .todos .todo-ctx {
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+  border-radius: 9999px;
+  padding: 1px 8px;
+}
+
+.todos .todo-tag {
+  background-color: yellow;
+}
+
+.todos .todo-ctx {
+  background-color: orange;
+}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { TODO } from '../view';
+import type { TODO } from '../lib/todo';
 import cn from '../lib/classNames';
 
 type TodoListProps = {

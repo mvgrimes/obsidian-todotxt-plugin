@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, type FormEvent } from 'react';
-import type { TODO } from '../view';
+import { type TODO } from '../lib/todo';
 import { TodoList } from './todolist';
 
 type TodosViewProps = {

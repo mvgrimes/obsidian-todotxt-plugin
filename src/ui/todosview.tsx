@@ -97,7 +97,7 @@ export const TodosView = (props: TodosViewProps) => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {todoTags.map((tag) => (
           <section key={tag}>
             <h3 className="text-lg mb-3 pb-0.5 border-b-2 border-slate-700">

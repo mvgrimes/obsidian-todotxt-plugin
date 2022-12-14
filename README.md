@@ -22,3 +22,4 @@ Handles \*.todotxt files.
 - [ ] Global keyboard shortcut to create new Todo
 - [ ] Command pallet command to create new Todo
 - [ ] Config menu set the default .todotxt file
+- [ ] Keyboard navigation through TODOs

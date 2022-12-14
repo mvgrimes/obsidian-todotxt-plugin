@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { TextFileView } from 'obsidian';
 import { TodosView } from './ui/todosview';
-import { type TODO } from './lib/todo';
+import { parseTodo, type TODO } from './lib/todo';
 
 export const VIEW_TYPE_CSV = 'todotxt-view';
 

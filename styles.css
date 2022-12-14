@@ -14,9 +14,8 @@ If your plugin does not need CSS, delete this file.
   justify-content: space-between;
 }
 
-.todos-view-header label {
-  margin-right: 0.5rem;
-
+.todos-view-header select {
+  margin: 0 0.5rem;
 }
 
 .todo-lists {
@@ -110,4 +109,40 @@ If your plugin does not need CSS, delete this file.
 .todo-ctx {
   color: #374151;
   background-color: #C7D2FE;
+}
+
+.todo-dialog-bg {
+  /* position: relative; */
+  /* z-index: 10; */
+}
+
+.todo-dialog-holder {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: #111827CC;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.todo-dialog {
+  width: 40rem;
+  min-height: 3rem;
+  border: 3px solid #312E81;
+  border-radius: 10px;
+  background-color: #111827;
+  z-index: 20;
+}
+
+.todo-dialog h3 {
+  margin: 0.5rem 0.5rem 0.1rem 0.5rem;
+}
+
+.todo-dialog input {
+  margin: 0.5rem 1rem 1.2rem 1rem;
+  width: 95%;
 }

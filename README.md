@@ -1,6 +1,6 @@
 # Obsidian TodoTxt Plugin
 
-Handles \*.todotxt files.
+Handles [\*.todotxt](https://github.com/todotxt/todo.txt) files.
 
 ## How to install
 
@@ -23,3 +23,4 @@ Handles \*.todotxt files.
 - [ ] Command pallet command to create new Todo
 - [ ] Config menu set the default .todotxt file
 - [ ] Keyboard navigation through TODOs
+- [ ] Priority colors are a bit bright

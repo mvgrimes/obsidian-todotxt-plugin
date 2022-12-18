@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node ./scripts/esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node ./scripts/esbuild.config.mjs production",
-    "css": "tailwindcss -i ./src/styles.css -o ./styles.css --watch",
+    "css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "version": "node ./scripts/version-bump.mjs && git add manifest.json versions.json",
     "pretty": "prettier --write 'src/**/*.{js,ts,jsx,tsx}'"
   },

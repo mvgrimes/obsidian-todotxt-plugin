@@ -4,7 +4,7 @@ interface TrashIconProps {
   className?: string;
 }
 
-export default function TrashIcon({ className }: TrashIconProps) {
+export function TrashIcon({ className }: TrashIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -22,3 +22,5 @@ export default function TrashIcon({ className }: TrashIconProps) {
     </svg>
   );
 }
+
+export default React.memo(TrashIcon);

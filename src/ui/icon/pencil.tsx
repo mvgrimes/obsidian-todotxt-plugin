@@ -4,7 +4,7 @@ interface PencilIconProps {
   className?: string;
 }
 
-export default function PencilIcon({ className }: PencilIconProps) {
+export function PencilIcon({ className }: PencilIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -22,3 +22,5 @@ export default function PencilIcon({ className }: PencilIconProps) {
     </svg>
   );
 }
+
+export default React.memo(PencilIcon);

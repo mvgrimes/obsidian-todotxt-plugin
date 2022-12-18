@@ -7,7 +7,6 @@ import {
   WorkspaceLeaf,
 } from 'obsidian';
 import { CSVView, VIEW_TYPE_CSV } from './view';
-import { readFileSync } from 'fs';
 
 // Remember to rename these classes and interfaces!
 
@@ -70,16 +69,6 @@ export default class MyPlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-  }
-
-  public getTodos() {
-    console.log(`[TodoTxt] view: `, { pwd: process?.env?.PWD });
-
-    // TODO: how do we find a file in the vault
-    const todos = readFileSync('/Users/mgrimes/Notes/.todo.txt', 'utf8');
-    console.log(`[TodoTxt] view: `, { todos });
-
-    return todos;
   }
 }
 

@@ -1,3 +1,188 @@
 #todotxt {
+  --todotxt-color-amber-300: rgb(252 211 77);
+  --todotxt-color-amber-600: rgb(217 119 6);
+  --todotxt-color-blue-200: rgb(191 219 254);
+  --todotxt-color-blue-300: rgb(147 197 253);
+  --todotxt-color-blue-600: #2563EB;
+  --todotxt-color-gray-200: rgb(229 231 235);
+  --todotxt-color-gray-400: rgb(156 163 175);
+  --todotxt-color-gray-600: rgb(75 85 99);
+  --todotxt-color-gray-700: rgb(55 65 81);
+  --todotxt-color-gray-900: rgb(17 24 39);
+  --todotxt-color-gray-900-9: rgb(17 24 39 / 0.90);
+  --todotxt-color-indigo-200: rgb(199 210 254);
+  --todotxt-color-indigo-900: rgb(49 46 129);
+  --todotxt-color-orange-300: rgb(253 186 116);
+  --todotxt-color-orange-600: #EA580C;
+  --todotxt-color-red-300: rgb(252 165 165);
+  --todotxt-color-red-600: #DC2626;
+  --todotxt-color-red-700: rgb(185 28 28);
+  --todotxt-color-sky-300: #7DD3FC;
+  --todotxt-color-sky-600: rgb(2 132 199);
+  --todotxt-color-slate-700: rgb(51 65 85);
 
+  .todo-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .todo-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .todo-list-container {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .todo-list-header {
+    border-bottom: 2px solid var(--todotxt-color-slate-700);
+  }
+
+  .todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .todo {
+    input[type="checkbox"] {
+      margin-top: 0.125rem;
+    }
+  }
+
+  .todo-label {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .todo-priority {
+    border-radius: 0.5rem;
+    padding: 0.125rem 0.375rem;
+    margin-right: 0.25rem;
+    font: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .todo-priority-a {
+    color: var(--todotxt-color-red-600);
+    background-color: var(--todotxt-color-red-300);
+  }
+  .todo-priority-b {
+    color: var(--todotxt-color-orange-600);
+    background-color: var(--todotxt-color-orange-300);
+  }
+  .todo-priority-c {
+    color: var(--todotxt-color-sky-600);
+    background-color: var(--todotxt-color-sky-300);
+  }
+
+  .todo-description {
+    display: flex;
+    align-items: flex-start;
+    color: var(--todotxt-color-gray-200);
+
+    .todo-completed {
+      text-decoration-line: line-through;
+      color: var(--todotxt-color-gray-400);
+    }
+  }
+
+  .todo-tag {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.25rem;
+    border-radius: 9999px;
+    color: var(--todotxt-color-gray-700);
+    background-color: var(--todotxt-color-blue-200);
+  }
+
+  .todo-ctx {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.25rem;
+    border-radius: 9999px;
+    color: var(--todotxt-color-gray-700);
+    background-color: var(--todotxt-color-indigo-200);
+  }
+
+  .todo-actions {
+    visibility: hidden;
+    display: flex;
+    gap: 0.125rem;
+    color: var(--todotxt-color-gray-600);
+
+    margin-left: 0.25rem;
+
+    button {
+      margin: 0;
+      padding: 1px;
+
+      svg {
+        display: inline;
+        width: 1rem;
+        height: 1rem;
+        color: inherit
+      }
+    }
+  }
+
+  .todo-label:hover {
+    .todo-actions {
+      visibility: visible;
+      color: var(--todotxt-color-gray-300);
+    }
+  }
+
+  .todo-dialog-bg {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: var(--todotxt-color-gray-900-9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .todo-dialog {
+    width: 66%;
+    border: 0.25rem solid var(--todotxt-color-indigo-900);
+    border-radius: 0.5rem;
+    background-color: var(--todotxt-color-gray-900);
+    z-index: 20;
+    padding: 0.5rem;
+  }
+  .todo-dialog-header {
+    margin: 0.125rem 1rem;
+  }
+  .todo-dialog-input {
+    margin: 0.125rem 1rem;
+    width: 95%;
+  }
+}
+
+/* sm */
+@media (min-width: 640px) {
+  #todotxt {
+   .todo-list-container {
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+  }
+}
+
+/* lg */
+@media (min-width: 1024px) {
+  #todotxt {
+    .todo-list-container {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+  }
 }

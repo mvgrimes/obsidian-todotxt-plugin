@@ -26,27 +26,25 @@ export const TodoList = (props: TodoListProps) => {
   };
 
   return (
-    <div>
+    <div className="todo-list">
       {sorted?.map((todo) => (
-        <div className="my-2 mx-2" key={todo.id}>
-          <label htmlFor={`todo-${todo.id}`} className="flex items-start group">
-            <div className="mt-0.5">
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                id={`todo-${todo.id}`}
-                onChange={() => handleChange(todo.id)}
-              />
-            </div>
+        <div className="todo" key={todo.id}>
+          <label htmlFor={`todo-${todo.id}`} className="todo-label">
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              id={`todo-${todo.id}`}
+              onChange={() => handleChange(todo.id)}
+            />
             <span
               className={cn(
-                'mr-1 rounded-lg my-0.5 px-1.5 py-0.5 text-xs',
+                'todo-priority',
                 todo.priority === 'A'
-                  ? 'text-red-700 bg-red-300'
+                  ? 'todo-priority-a'
                   : todo.priority === 'B'
-                  ? 'text-amber-600 bg-orange-300'
+                  ? 'todo-priority-b'
                   : todo.priority === 'C'
-                  ? 'text-sky-600 bg-blue-300'
+                  ? 'todo-priority-c'
                   : '',
               )}
             >
@@ -54,48 +52,36 @@ export const TodoList = (props: TodoListProps) => {
             </span>
             {/* <span>{todo.completedDate}</span> */}
             {/* <span>{todo.createDate}</span> */}
-            <span className="flex items-start">
+            <span className="todo-description">
               <span>
-                <span
-                  className={cn(
-                    todo.completed
-                      ? 'line-through text-gray-400'
-                      : 'text-gray-200',
-                  )}
-                >
+                <span className={cn(todo.completed ? 'todo-completed' : '')}>
                   {todo.description}
                 </span>
                 {todo.tags
                   .filter((tag) => tag !== props.tag)
                   .map((tag) => (
-                    <span
-                      className="text-sm ml-2 rounded-full py-0.5 px-1 text-gray-700 bg-blue-200"
-                      key={tag}
-                    >
+                    <span className="todo-tag" key={tag}>
                       {tag}
                     </span>
                   ))}
                 {todo.ctx.map((ctx) => (
-                  <span
-                    className="text-xs ml-2 rounded-full py-0.5 px-1 text-gray-700 bg-indigo-200"
-                    key={ctx}
-                  >
+                  <span className="todo-ctx" key={ctx}>
                     {ctx}
                   </span>
                 ))}
               </span>
-              <span className="invisible group-hover:visible flex flex-row ml-2 space-x-1 text-gray-600 hover:text-gray-300">
+              <span className="todo-actions">
                 <button
-                  className="m-0 p-1 clickable-icon"
+                  className="clickable-icon"
                   onClick={(e) => handleEdit(e, todo.id)}
                 >
-                  <PencilIcon className="inline w-4 h-4 text-inherit" />
+                  <PencilIcon className="" />
                 </button>
                 <button
-                  className="m-0 p-1 clickable-icon"
+                  className="clickable-icon"
                   onClick={(e) => handleDelete(e, todo.id)}
                 >
-                  <TrashIcon className="inline w-4 h-4 text-inherit" />
+                  <TrashIcon className="" />
                 </button>
               </span>
             </span>

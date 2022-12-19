@@ -159,15 +159,26 @@
     background-color: var(--todotxt-color-gray-900);
     z-index: 20;
     padding: 0.5rem;
+    margin: 1.5rem;
   }
 
   #todotxt .todo-dialog-header {
-    margin: 0.125rem 1rem;
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
   }
 
   #todotxt .todo-dialog-input {
-    margin: 0.125rem 1rem;
-    width: 95%;
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
+    width: 100%;
+  }
+
+  #todotxt .todo-dialog-actions {
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
+    display: flex;
+    justify-content: flex-end; 
+    gap: 0.25rem;
   }
 
 /* sm */

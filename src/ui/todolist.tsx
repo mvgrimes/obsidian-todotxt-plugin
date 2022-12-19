@@ -7,22 +7,24 @@ import cn from '../lib/classNames';
 type TodoListProps = {
   tag: string;
   todos: TODO[];
-  onChange: (id: number) => void;
+  onCompleteToggle: (t: TODO) => void;
+  onDeleteClicked: (t: TODO) => void;
+  onEditClicked: (t: TODO) => void;
 };
 export const TodoList = (props: TodoListProps) => {
   console.log(`TodoListView: `, { todos: props.todos });
   const sorted = [...props.todos].sort(sortTodo);
 
-  const handleChange = (id: number) => {
-    if (props.onChange) props.onChange(id);
+  const handleComplete = (t: TODO) => {
+    if (props.onCompleteToggle) props.onCompleteToggle(t);
   };
 
-  const handleEdit = (e: MouseEvent<HTMLButtonElement>, id: number) => {
-    e.preventDefault();
+  const handleDelete = (t: TODO) => {
+    if (props.onDeleteClicked) props.onDeleteClicked(t);
   };
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>, id: number) => {
-    e.preventDefault();
+  const handleEdit = (t: TODO) => {
+    if (props.onEditClicked) props.onEditClicked(t);
   };
 
   return (
@@ -34,7 +36,7 @@ export const TodoList = (props: TodoListProps) => {
               type="checkbox"
               checked={todo.completed}
               id={`todo-${todo.id}`}
-              onChange={() => handleChange(todo.id)}
+              onChange={() => handleComplete(todo)}
             />
             <span
               className={cn(
@@ -73,13 +75,13 @@ export const TodoList = (props: TodoListProps) => {
               <span className="todo-actions">
                 <button
                   className="clickable-icon"
-                  onClick={(e) => handleEdit(e, todo.id)}
+                  onClick={() => handleEdit(todo)}
                 >
                   <PencilIcon className="" />
                 </button>
                 <button
                   className="clickable-icon"
-                  onClick={(e) => handleDelete(e, todo.id)}
+                  onClick={() => handleDelete(todo)}
                 >
                   <TrashIcon className="" />
                 </button>

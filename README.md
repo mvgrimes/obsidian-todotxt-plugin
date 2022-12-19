@@ -16,11 +16,11 @@ Handles [\*.todotxt](https://github.com/todotxt/todo.txt) files.
 ## TODO
 
 - [ ] Handle parseTodo() errors
-- [ ] Delete a Todo
-- [ ] Edit a Todo
+- [x] Delete a Todo
+- [x] Edit a Todo
 - [ ] Keyboard shortcut to create new Todo
 - [ ] Global keyboard shortcut to create new Todo
 - [ ] Command pallet command to create new Todo
 - [ ] Config menu set the default .todotxt file
 - [ ] Keyboard navigation through TODOs
-- [ ] Priority colors are a bit bright
+- [x] Priority colors are a bit bright

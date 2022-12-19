@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { TextFileView } from 'obsidian';
 import { TodosView } from './ui/todosview';
-import { parseTodo, type TODO } from './lib/todo';
+import { parseTodo, stringifyTodo, type TODO } from './lib/todo';
 
 export const VIEW_TYPE_CSV = 'todotxt-view';
 
@@ -13,22 +13,7 @@ export class CSVView extends TextFileView {
   // Convert from TODO[] to string before writing to disk
   getViewData() {
     console.log(`[TodoTxt] getViewData`);
-    return this.todoData
-      .map((todo: TODO) =>
-        [
-          todo.completed ? 'x' : null,
-          todo.priority && !todo.completed ? `(${todo.priority})` : null,
-          todo.completedDate,
-          todo.createDate,
-          todo.description,
-          todo.priority && todo.completed ? `pri:${todo.priority}` : null,
-          ...todo.tags,
-          ...todo.ctx,
-        ]
-          .filter((item) => item)
-          .join(' '),
-      )
-      .join('\n');
+    return this.todoData.map(stringifyTodo).join('\n');
   }
 
   // Convert string from disk to TODO[]

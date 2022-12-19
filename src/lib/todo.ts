@@ -58,3 +58,18 @@ function matchAll(s: string, re: RegExp) {
   const results = [...s.matchAll(re)];
   return results.map((r) => r[0]);
 }
+
+export function stringifyTodo(todo: TODO) {
+  return [
+    todo.completed ? 'x' : null,
+    todo.priority && !todo.completed ? `(${todo.priority})` : null,
+    todo.completedDate,
+    todo.createDate,
+    todo.description,
+    todo.priority && todo.completed ? `pri:${todo.priority}` : null,
+    ...todo.tags,
+    ...todo.ctx,
+  ]
+    .filter((item) => item)
+    .join(' ');
+}

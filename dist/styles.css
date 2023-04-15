@@ -55,6 +55,17 @@
       margin-top: 0.125rem;
     }
 
+  #todotxt .todo {
+    border: 3px solid transparent;
+    border-radius: 4px;
+  }
+
+  /* .todo:has(input:focus)  { */
+
+  #todotxt .todo:focus-within  {
+    border: 3px solid var(--todotxt-color-slate-700);
+  }
+
   #todotxt .todo-label {
     display: flex;
     align-items: flex-start;

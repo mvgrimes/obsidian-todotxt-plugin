@@ -27,6 +27,15 @@ export const TodoList = (props: TodoListProps) => {
     if (props.onEditClicked) props.onEditClicked(t);
   };
 
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    t: TODO,
+  ) => {
+    if (e.key === 'e' || e.key === 'Enter') {
+      handleEdit(t);
+    }
+  };
+
   return (
     <div className="todo-list">
       {sorted?.map((todo) => (
@@ -37,6 +46,7 @@ export const TodoList = (props: TodoListProps) => {
               checked={todo.completed}
               id={`todo-${todo.id}`}
               onChange={() => handleComplete(todo)}
+              onKeyUp={(e) => handleKeyPress(e, todo)}
             />
             <span
               className={cn(

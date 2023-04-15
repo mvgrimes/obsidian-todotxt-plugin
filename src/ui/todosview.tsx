@@ -95,13 +95,25 @@ export const TodosView = (props: TodosViewProps) => {
     setConfirmCreate(false);
   };
 
+  // Keyboard shortcuts/navigation
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'n') {
+      console.log('new');
+      handleShowCreate();
+      e.preventDefault();
+    } else if (e.key === 'p') {
+      console.log('todo: jump to priority filter');
+      e.preventDefault();
+    }
+  };
+
   // Display the dialog
   const handleShowCreate = () => setConfirmCreate(true);
   const handleShowEdit = (t: TODO | null) => setConfirmEdit(t);
   const handleShowDelete = (t: TODO | null) => setConfirmDelete(t);
 
   return (
-    <div id="todotxt">
+    <div id="todotxt" onKeyUp={handleKeyPress}>
       <div className="todo-container">
         <h2 className="">ToDo Lists</h2>
         <div className="todo-controls">
@@ -181,7 +193,7 @@ const CreateTodoDialog = (props: CreateTodoProps) => {
   };
 
   return (
-    <div>
+    <div onKeyUp={(e) => e.stopPropagation()}>
       <div className="todo-dialog-bg">
         <div className="todo-dialog">
           <h3 className="todo-dialog-header">Enter a New ToDo:</h3>
@@ -229,7 +241,7 @@ const DeleteTodoDialog = (props: DeleteTodoProps) => {
   };
 
   return (
-    <div>
+    <div onKeyUp={(e) => e.stopPropagation()}>
       <div className="todo-dialog-bg">
         <div className="todo-dialog" onKeyUp={handleKeyPress}>
           <h3 className="todo-dialog-header">Confirm Delete:</h3>
@@ -282,7 +294,7 @@ const EditTodoDialog = (props: EditTodoProps) => {
   };
 
   return (
-    <div>
+    <div onKeyUp={(e) => e.stopPropagation()}>
       <div className="todo-dialog-bg">
         <div className="todo-dialog">
           <h3 className="todo-dialog-header">Edit Todo:</h3>

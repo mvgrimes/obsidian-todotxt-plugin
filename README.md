@@ -20,7 +20,7 @@ Handles [\*.todotxt](https://github.com/todotxt/todo.txt) files.
 - [x] Edit a Todo
 - [ ] Keyboard shortcut to create new Todo
 - [ ] Global keyboard shortcut to create new Todo
-- [ ] Command pallet command to create new Todo
+- [ ] Command palette command to create new Todo
 - [ ] Config menu set the default .todotxt file
-- [ ] Keyboard navigation through TODOs
+- [x] Keyboard navigation through TODOs
 - [x] Priority colors are a bit bright

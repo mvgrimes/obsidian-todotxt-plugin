@@ -73,3 +73,13 @@ export function stringifyTodo(todo: TODO) {
     .filter((item) => item)
     .join(' ');
 }
+
+export function sortTodo(a: TODO, b: TODO) {
+  if (a.completed < b.completed) return -1;
+  if (a.completed > b.completed) return 1;
+  if ((a.priority || 'X') < (b.priority || 'X')) return -1;
+  if ((a.priority || 'X') > (b.priority || 'X')) return 1;
+  if (a.description < b.description) return -1;
+  if (a.description > b.description) return 1;
+  return 0;
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PencilIcon from './icon/pencil';
 import TrashIcon from './icon/trash';
-import type { TODO } from '../lib/todo';
+import { sortTodo, type TODO } from '../lib/todo';
 import cn from '../lib/classNames';
 
 type TodoListProps = {
@@ -93,13 +93,3 @@ export const TodoList = (props: TodoListProps) => {
     </div>
   );
 };
-
-function sortTodo(a: TODO, b: TODO) {
-  if (a.completed < b.completed) return -1;
-  if (a.completed > b.completed) return 1;
-  if ((a.priority || 'X') < (b.priority || 'X')) return -1;
-  if ((a.priority || 'X') > (b.priority || 'X')) return 1;
-  if (a.description < b.description) return -1;
-  if (a.description > b.description) return 1;
-  return 0;
-}

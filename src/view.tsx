@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
-import { TextFileView } from 'obsidian';
+import { TextFileView, WorkspaceLeaf } from 'obsidian';
 import { TodosView } from './ui/todosview';
 import { parseTodo, stringifyTodo, type TODO } from './lib/todo';
+import TodotxtPlugin from './main';
 
 export const VIEW_TYPE_TODOTXT = 'todotxt-view';
 
 export class TodotxtView extends TextFileView {
   todoData: TODO[];
   root: Root;
+  plugin: TodotxtPlugin;
+
+  constructor(leaf: WorkspaceLeaf, plugin: TodotxtPlugin) {
+    super(leaf);
+    this.plugin = plugin;
+  }
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
@@ -56,7 +63,13 @@ export class TodotxtView extends TextFileView {
   refresh() {
     console.log(`[TodoTxt] refresh:`);
     this.root.render(
-      <TodosView todos={this.todoData} onChange={this.update.bind(this)} />,
+      <TodosView
+        todos={this.todoData}
+        onChange={this.update.bind(this)}
+        defaultPriorityFilter={
+          this.plugin?.settings?.defaultPriorityFilter || 'B'
+        }
+      />,
     );
   }
 }

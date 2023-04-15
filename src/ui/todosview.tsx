@@ -10,14 +10,16 @@ import { parseTodo, stringifyTodo, type TODO } from '../lib/todo';
 import { TodoList } from './todolist';
 
 type TodosViewProps = {
+  defaultPriorityFilter: string;
   todos: TODO[];
   onChange: (t: TODO[]) => void;
 };
 export const TodosView = (props: TodosViewProps) => {
-  const [minPriority, setMinPriority] = useState('B');
+  const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<TODO | null>(null);
   const [confirmEdit, setConfirmEdit] = useState<TODO | null>(null);
+
   console.log(`TodosView: `, { todos: props.todos });
 
   // Get all the tags, plus add a +Default tag for untagged todos

@@ -9,11 +9,13 @@ import {
 import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
 
 interface TodotxtPluginSettings {
-  mySetting: string;
+  defaultPriorityFilter: string;
+  defaultTodotxt: string;
 }
 
 const DEFAULT_SETTINGS: TodotxtPluginSettings = {
-  mySetting: 'default',
+  defaultPriorityFilter: 'B',
+  defaultTodotxt: 'default',
 };
 
 export default class TodotxtPlugin extends Plugin {
@@ -21,6 +23,26 @@ export default class TodotxtPlugin extends Plugin {
 
   async onload() {
     await this.loadSettings();
+
+    this.registerView(
+      VIEW_TYPE_TODOTXT,
+      (leaf: WorkspaceLeaf) => new TodotxtView(leaf, this),
+    );
+    this.registerExtensions(['todotxt'], VIEW_TYPE_TODOTXT);
+
+    // This adds a settings tab so the user can configure various aspects of the plugin
+    this.addSettingTab(new TodoSettingTab(this.app, this));
+
+    // Add a command for the command palette
+    // this.addCommand({
+    //   id: 'todotxt-add-todo',
+    //   name: 'Add todo item to TODOTXT file',
+    //   callback: () => {
+    //     new TodoModal(this.app, (result) => {
+    //       new Notice(`Adding '${result}' to ${this.settings.defaultTodotxt}`);
+    //     }).open();
+    //   },
+    // });
 
     // This creates an icon in the left ribbon
     // Could be used to jump to the default todo list
@@ -39,15 +61,6 @@ export default class TodotxtPlugin extends Plugin {
     // TODO: add a count of todos
     // const statusBarItemEl = this.addStatusBarItem();
     // statusBarItemEl.setText('Todotxt');
-
-    this.registerView(
-      VIEW_TYPE_TODOTXT,
-      (leaf: WorkspaceLeaf) => new TodotxtView(leaf),
-    );
-    this.registerExtensions(['todotxt'], VIEW_TYPE_TODOTXT);
-
-    // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new TodoSettingTab(this.app, this));
 
     // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
     // Using this function will automatically remove the event listener when this plugin is disabled.
@@ -104,17 +117,33 @@ class TodoSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', { text: 'Settings for TodoTxt plugin.' });
 
     new Setting(containerEl)
-      .setName('Setting #1')
-      .setDesc("It's a secret")
-      .addText((text) =>
-        text
-          .setPlaceholder('Enter your secret')
-          .setValue(this.plugin.settings.mySetting)
+      .setName('Default priority filter')
+      .setDesc(
+        'By default, only Todos with this priority or high will be displayed.',
+      )
+      .addDropdown((dropdown) =>
+        dropdown
+          .addOptions({ A: 'A', B: 'B', C: 'C', Z: 'All' })
+          .setValue(this.plugin.settings.defaultPriorityFilter)
           .onChange(async (value) => {
             console.log('Secret: ' + value);
-            this.plugin.settings.mySetting = value;
+            this.plugin.settings.defaultPriorityFilter = value;
             await this.plugin.saveSettings();
           }),
       );
+
+    // new Setting(containerEl)
+    //   .setName('Default .todotxt file')
+    //   .setDesc('New todos entered from the command palette will be stored here')
+    //   .addText((text) =>
+    //     text
+    //       .setPlaceholder('Enter your secret')
+    //       .setValue(this.plugin.settings.defaultTodotxt)
+    //       .onChange(async (value) => {
+    //         console.log('Secret: ' + value);
+    //         this.plugin.settings.defaultTodotxt = value;
+    //         await this.plugin.saveSettings();
+    //       }),
+    //   );
   }
 }

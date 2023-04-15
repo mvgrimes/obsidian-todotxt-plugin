@@ -24,21 +24,23 @@ export default class MyPlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    // This creates an icon in the left ribbon.
-    const ribbonIconEl = this.addRibbonIcon(
-      'dice',
-      'Sample Plugin',
-      (evt: MouseEvent) => {
-        // Called when the user clicks the icon.
-        new Notice('This is a notice!');
-      },
-    );
-    // Perform additional things with the ribbon
-    ribbonIconEl.addClass('my-plugin-ribbon-class');
+    // This creates an icon in the left ribbon
+    // Could be used to jump to the default todo list
+    // const ribbonIconEl = this.addRibbonIcon(
+    //   'dice',
+    //   'Todo Plugin',
+    //   (evt: MouseEvent) => {
+    //     // Called when the user clicks the icon.
+    //     new Notice('This is a notice!');
+    //   },
+    // );
+    // // Perform additional things with the ribbon
+    // ribbonIconEl.addClass('my-plugin-ribbon-class');
 
     // This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-    const statusBarItemEl = this.addStatusBarItem();
-    statusBarItemEl.setText('Status Bar Text');
+    // TODO: add a count of todos
+    // const statusBarItemEl = this.addStatusBarItem();
+    // statusBarItemEl.setText('Todotxt');
 
     this.registerView(
       VIEW_TYPE_CSV,
@@ -47,7 +49,7 @@ export default class MyPlugin extends Plugin {
     this.registerExtensions(['todotxt'], VIEW_TYPE_CSV);
 
     // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new SampleSettingTab(this.app, this));
+    this.addSettingTab(new TodoSettingTab(this.app, this));
 
     // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
     // Using this function will automatically remove the event listener when this plugin is disabled.
@@ -72,7 +74,7 @@ export default class MyPlugin extends Plugin {
   }
 }
 
-// class SampleModal extends Modal {
+// class TodoModal extends Modal {
 //   constructor(app: App) {
 //     super(app);
 //   }
@@ -88,7 +90,7 @@ export default class MyPlugin extends Plugin {
 //   }
 // }
 
-class SampleSettingTab extends PluginSettingTab {
+class TodoSettingTab extends PluginSettingTab {
   plugin: MyPlugin;
 
   constructor(app: App, plugin: MyPlugin) {

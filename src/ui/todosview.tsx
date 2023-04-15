@@ -20,14 +20,17 @@ export const TodosView = (props: TodosViewProps) => {
   const [confirmEdit, setConfirmEdit] = useState<TODO | null>(null);
   console.log(`TodosView: `, { todos: props.todos });
 
+  // Get all the tags, plus add a +Default tag for untagged todos
   const todoTags = ['+Default', ...props.todos.flatMap((todo) => todo.tags)]
     .sort()
     .unique();
 
+  // Create a list of each tag...
   const todoLists = Object.fromEntries(
     todoTags.map((tag) => [tag, [] as TODO[]]),
   );
 
+  // ... and populate them
   props.todos.forEach((todo) => {
     if ((todo.priority || 'Z') > minPriority) return;
 

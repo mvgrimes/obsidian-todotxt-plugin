@@ -4,9 +4,9 @@ import { TextFileView } from 'obsidian';
 import { TodosView } from './ui/todosview';
 import { parseTodo, stringifyTodo, type TODO } from './lib/todo';
 
-export const VIEW_TYPE_CSV = 'todotxt-view';
+export const VIEW_TYPE_TODOTXT = 'todotxt-view';
 
-export class CSVView extends TextFileView {
+export class TodotxtView extends TextFileView {
   todoData: TODO[];
   root: Root;
 
@@ -43,7 +43,7 @@ export class CSVView extends TextFileView {
   }
 
   getViewType() {
-    return VIEW_TYPE_CSV;
+    return VIEW_TYPE_TODOTXT;
   }
 
   update(todos: TODO[]) {

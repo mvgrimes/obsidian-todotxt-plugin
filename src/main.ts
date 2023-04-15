@@ -6,20 +6,18 @@ import {
   Setting,
   WorkspaceLeaf,
 } from 'obsidian';
-import { CSVView, VIEW_TYPE_CSV } from './view';
+import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
 
-// Remember to rename these classes and interfaces!
-
-interface MyPluginSettings {
+interface TodotxtPluginSettings {
   mySetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: TodotxtPluginSettings = {
   mySetting: 'default',
 };
 
-export default class MyPlugin extends Plugin {
-  settings: MyPluginSettings;
+export default class TodotxtPlugin extends Plugin {
+  settings: TodotxtPluginSettings;
 
   async onload() {
     await this.loadSettings();
@@ -43,10 +41,10 @@ export default class MyPlugin extends Plugin {
     // statusBarItemEl.setText('Todotxt');
 
     this.registerView(
-      VIEW_TYPE_CSV,
-      (leaf: WorkspaceLeaf) => new CSVView(leaf),
+      VIEW_TYPE_TODOTXT,
+      (leaf: WorkspaceLeaf) => new TodotxtView(leaf),
     );
-    this.registerExtensions(['todotxt'], VIEW_TYPE_CSV);
+    this.registerExtensions(['todotxt'], VIEW_TYPE_TODOTXT);
 
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TodoSettingTab(this.app, this));
@@ -91,9 +89,9 @@ export default class MyPlugin extends Plugin {
 // }
 
 class TodoSettingTab extends PluginSettingTab {
-  plugin: MyPlugin;
+  plugin: TodotxtPlugin;
 
-  constructor(app: App, plugin: MyPlugin) {
+  constructor(app: App, plugin: TodotxtPlugin) {
     super(app, plugin);
     this.plugin = plugin;
   }

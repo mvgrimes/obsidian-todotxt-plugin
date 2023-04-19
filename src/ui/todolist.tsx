@@ -33,6 +33,8 @@ export const TodoList = (props: TodoListProps) => {
   ) => {
     if (e.key === 'e' || e.key === 'Enter') {
       handleEdit(t);
+    } else if (e.key === 'd') {
+      handleDelete(t);
     }
   };
 

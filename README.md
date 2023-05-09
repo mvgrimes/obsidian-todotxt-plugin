@@ -40,3 +40,11 @@ Use `tab` and `shift-tab` to navigate through your todos.
 - [ ] Config menu set the default .todotxt file
 - [x] Keyboard navigation through TODOs
 - [x] Priority colors are a bit bright
+
+## Development
+
+Helpful commands to run while developing:
+
+  $ npm run dev # compile typescript to ./dist via esbuild
+  $ npm run css # compile css to ./dist via postcss
+  $ npm run cp # copy files from ./dist to Obsidian plugins dir

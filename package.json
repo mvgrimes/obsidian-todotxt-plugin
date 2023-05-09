@@ -8,7 +8,8 @@
     "build": "tsc -noEmit -skipLibCheck && node ./scripts/esbuild.config.mjs production && cp manifest.json versions.json dist/ && postcss -o ./dist/styles.css ./src/styles.css",
     "css": "postcss -o ./dist/styles.css --watch ./src/styles.css",
     "cp": "nodemon --watch ./dist --ext js,json,css --exec bash -c 'cp dist/* $HOME/Notes/.obsidian/plugins/todotxt-plugin/'",
-    "version": "node ./scripts/version-bump.mjs && git add manifest.json versions.json",
+    "version": "node ./scripts/version-bump.mjs",
+    "release": "zx ./scripts/release.mjs",
     "pretty": "prettier --write 'src/**/*.{js,ts,jsx,tsx}'"
   },
   "keywords": [],
@@ -30,7 +31,8 @@
     "postcss-import": "^15.1.0",
     "postcss-nested": "^6.0.0",
     "tslib": "2.4.0",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "zx": "^7.2.2"
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -126,7 +126,6 @@ class TodoSettingTab extends PluginSettingTab {
           .addOptions({ A: 'A', B: 'B', C: 'C', Z: 'All' })
           .setValue(this.plugin.settings.defaultPriorityFilter)
           .onChange(async (value) => {
-            console.log('Secret: ' + value);
             this.plugin.settings.defaultPriorityFilter = value;
             await this.plugin.saveSettings();
           }),
@@ -140,7 +139,6 @@ class TodoSettingTab extends PluginSettingTab {
     //       .setPlaceholder('Enter your secret')
     //       .setValue(this.plugin.settings.defaultTodotxt)
     //       .onChange(async (value) => {
-    //         console.log('Secret: ' + value);
     //         this.plugin.settings.defaultTodotxt = value;
     //         await this.plugin.saveSettings();
     //       }),

@@ -20,8 +20,6 @@ export const TodosView = (props: TodosViewProps) => {
   const [confirmDelete, setConfirmDelete] = useState<TODO | null>(null);
   const [confirmEdit, setConfirmEdit] = useState<TODO | null>(null);
 
-  console.log(`TodosView: `, { todos: props.todos });
-
   // Get all the tags, plus add a +Default tag for untagged todos
   const todoTags = ['+Default', ...props.todos.flatMap((todo) => todo.tags)]
     .sort()
@@ -85,7 +83,6 @@ export const TodosView = (props: TodosViewProps) => {
     setConfirmEdit(null);
   };
   const handleAdd = (todoText: string | null) => {
-    console.log(`Create todo: `, todoText);
     if (todoText !== null && todoText !== '') {
       // Parse the todo
       const todo = parseTodo(todoText, props.todos.length);
@@ -100,11 +97,9 @@ export const TodosView = (props: TodosViewProps) => {
   // Keyboard shortcuts/navigation
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'n') {
-      console.log('new');
       handleShowCreate();
       e.preventDefault();
     } else if (e.key === 'p') {
-      console.log('todo: jump to priority filter');
       e.preventDefault();
     }
   };

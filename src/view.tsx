@@ -19,20 +19,15 @@ export class TodotxtView extends TextFileView {
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
-    console.log(`[TodoTxt] getViewData`);
     return this.todoData.map(stringifyTodo).join('\n');
   }
 
   // Convert string from disk to TODO[]
   setViewData(data: string, clear: boolean) {
-    console.log(`[TodoTxt] setViewData`);
-
     this.todoData = data
       .split('\n')
       .filter((line) => line)
       .map(parseTodo);
-
-    console.log(`[TodoTxt] setViewData:`, { todoData: this.todoData });
 
     this.refresh();
   }
@@ -54,14 +49,13 @@ export class TodotxtView extends TextFileView {
   }
 
   update(todos: TODO[]) {
-    console.log(`[TodoTxt] update`, { todos });
+    // console.log(`[TodoTxt] update`, { todos });
     this.todoData = todos;
     this.refresh();
     this.requestSave();
   }
 
   refresh() {
-    console.log(`[TodoTxt] refresh:`);
     this.root.render(
       <TodosView
         todos={this.todoData}

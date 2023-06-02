@@ -12,7 +12,6 @@ type TodoListProps = {
   onEditClicked: (t: TODO) => void;
 };
 export const TodoList = (props: TodoListProps) => {
-  console.log(`TodoListView: `, { todos: props.todos });
   const sorted = [...props.todos].sort(sortTodo);
 
   const handleComplete = (t: TODO) => {

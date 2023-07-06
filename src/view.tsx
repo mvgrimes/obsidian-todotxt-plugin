@@ -9,6 +9,7 @@ export const VIEW_TYPE_TODOTXT = 'todotxt-view';
 
 export class TodotxtView extends TextFileView {
   todoData: TODO[];
+  fileFormat: 'unix' | 'dos' = 'unix';
   root: Root;
   plugin: TodotxtPlugin;
 
@@ -19,13 +20,16 @@ export class TodotxtView extends TextFileView {
 
   // Convert from TODO[] to string before writing to disk
   getViewData() {
-    return this.todoData.map(stringifyTodo).join('\n');
+    const lineSep = this.fileFormat === 'dos' ? '\r\n' : '\n';
+    return this.todoData.map(stringifyTodo).join(lineSep);
   }
 
   // Convert string from disk to TODO[]
   setViewData(data: string, clear: boolean) {
+    if (data.match(/\r\n/)) this.fileFormat = 'dos';
+
     this.todoData = data
-      .split('\n')
+      .split(/\r?\n/)
       .filter((line) => line)
       .map(parseTodo);
 

@@ -11,11 +11,13 @@ import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
 interface TodotxtPluginSettings {
   defaultPriorityFilter: string;
   defaultTodotxt: string;
+  additionalExts: string[];
 }
 
 const DEFAULT_SETTINGS: TodotxtPluginSettings = {
   defaultPriorityFilter: 'B',
   defaultTodotxt: 'default',
+  additionalExts: [],
 };
 
 export default class TodotxtPlugin extends Plugin {
@@ -28,7 +30,10 @@ export default class TodotxtPlugin extends Plugin {
       VIEW_TYPE_TODOTXT,
       (leaf: WorkspaceLeaf) => new TodotxtView(leaf, this),
     );
-    this.registerExtensions(['todotxt'], VIEW_TYPE_TODOTXT);
+    this.registerExtensions(
+      ['todotxt', ...this.settings.additionalExts],
+      VIEW_TYPE_TODOTXT,
+    );
 
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TodoSettingTab(this.app, this));
@@ -113,10 +118,10 @@ class TodoSettingTab extends PluginSettingTab {
     const { containerEl } = this;
 
     containerEl.empty();
+    const settingsDiv = containerEl.createDiv({ cls: 'todotxt-settings' });
+    settingsDiv.createEl('h2', { text: 'Settings for TodoTxt plugin.' });
 
-    containerEl.createEl('h2', { text: 'Settings for TodoTxt plugin.' });
-
-    new Setting(containerEl)
+    new Setting(settingsDiv)
       .setName('Default priority filter')
       .setDesc(
         'By default, only Todos with this priority or high will be displayed.',
@@ -131,17 +136,30 @@ class TodoSettingTab extends PluginSettingTab {
           }),
       );
 
-    // new Setting(containerEl)
-    //   .setName('Default .todotxt file')
-    //   .setDesc('New todos entered from the command palette will be stored here')
-    //   .addText((text) =>
-    //     text
-    //       .setPlaceholder('Enter your secret')
-    //       .setValue(this.plugin.settings.defaultTodotxt)
-    //       .onChange(async (value) => {
-    //         this.plugin.settings.defaultTodotxt = value;
-    //         await this.plugin.saveSettings();
-    //       }),
-    //   );
+    settingsDiv.createEl('h4', {
+      text: 'Experimental',
+      cls: 'todo-experimental-heading',
+    });
+    const expDiv = settingsDiv.createEl('details');
+    expDiv.createEl('summary', {
+      text:
+        'Warning: These features are considered experimental and may change or be removed from future versions.' +
+        '(Click to expand.)',
+    });
+
+    new Setting(expDiv)
+      .setName('Additional TodoTxt extension')
+      .setDesc(
+        'Additional filename extensions (separate multiple extensions by commas) to treat as TodoTxt files.' +
+          '\nRequires restart of Obsidian.',
+      )
+      .addText((text) =>
+        text
+          .setValue(this.plugin.settings.additionalExts.join(','))
+          .onChange(async (value) => {
+            this.plugin.settings.additionalExts = value?.split(/\s*,\s*/) || [];
+            await this.plugin.saveSettings();
+          }),
+      );
   }
 }

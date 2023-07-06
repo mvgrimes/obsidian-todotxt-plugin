@@ -188,9 +188,14 @@
     margin-top: 0.125rem;
     margin-bottom: 0.125rem;
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     gap: 0.25rem;
   }
+
+.todotxt-settings .todo-experimental-heading {
+  margin-top: 4rem;
+  margin-bottom: 0.25rem;
+}
 
 /* sm */
 

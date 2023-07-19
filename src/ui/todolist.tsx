@@ -77,11 +77,13 @@ export const TodoList = (props: TodoListProps) => {
                       {tag}
                     </span>
                   ))}
-                {todo.ctx.map((ctx) => (
-                  <span className="todo-ctx" key={ctx}>
-                    {ctx}
-                  </span>
-                ))}
+                {todo.ctx
+                  .filter((ctx) => ctx !== props.tag)
+                  .map((ctx) => (
+                    <span className="todo-ctx" key={ctx}>
+                      {ctx}
+                    </span>
+                  ))}
               </span>
               <span className="todo-actions">
                 <button

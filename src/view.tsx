@@ -67,6 +67,9 @@ export class TodotxtView extends TextFileView {
         defaultPriorityFilter={
           this.plugin?.settings?.defaultPriorityFilter || 'B'
         }
+        defaultOrganizeBy={
+          this.plugin?.settings?.defaultOrganizeBy || 'project'
+        }
       />,
     );
   }

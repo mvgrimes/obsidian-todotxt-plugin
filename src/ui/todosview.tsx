@@ -1,29 +1,45 @@
 import * as React from 'react';
-import {
-  useState,
-  type FormEvent,
-  type ChangeEvent,
-  type KeyboardEvent,
-  type MouseEvent,
-} from 'react';
+import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { parseTodo, stringifyTodo, type TODO } from '../lib/todo';
 import { TodoList } from './todolist';
+import { EditTodoDialog } from './edit-todo-dialog';
+import { DeleteTodoDialog } from './delete-todo-dialog';
+import { CreateTodoDialog } from './create-todo-dialog';
 
 type TodosViewProps = {
   defaultPriorityFilter: string;
+  defaultOrganizeBy: 'project' | 'context';
   todos: TODO[];
   onChange: (t: TODO[]) => void;
 };
+type OrganizeBy = 'project' | 'context';
+
 export const TodosView = (props: TodosViewProps) => {
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<TODO | null>(null);
   const [confirmEdit, setConfirmEdit] = useState<TODO | null>(null);
+  const [organizeBy, setOrganizeBy] = useState<OrganizeBy>(
+    props.defaultOrganizeBy,
+  );
 
   // Get all the tags, plus add a +Default tag for untagged todos
-  const todoTags = ['+Default', ...props.todos.flatMap((todo) => todo.tags)]
-    .sort()
-    .unique();
+  const todoTags =
+    organizeBy === 'project'
+      ? [
+          '+Default',
+          ...props.todos
+            .flatMap((todo) => todo.tags)
+            .sort()
+            .unique(),
+        ]
+      : [
+          '@Default',
+          ...props.todos
+            .flatMap((todo) => todo.ctx)
+            .sort()
+            .unique(),
+        ];
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
@@ -34,20 +50,37 @@ export const TodosView = (props: TodosViewProps) => {
   props.todos.forEach((todo) => {
     if ((todo.priority || 'Z') > minPriority) return;
 
-    if (todo.tags.length > 0) {
-      todo.tags.forEach((tag) => {
-        todoLists[tag] ||= [];
-        todoLists[tag].push(todo);
-      });
+    if (organizeBy === 'project') {
+      if (todo.tags.length > 0) {
+        todo.tags.forEach((tag) => {
+          todoLists[tag] ||= [];
+          todoLists[tag].push(todo);
+        });
+      } else {
+        todoLists['+Default'] ||= [];
+        todoLists['+Default'].push(todo);
+      }
     } else {
-      todoLists['+Default'] ||= [];
-      todoLists['+Default'].push(todo);
+      if (todo.ctx.length > 0) {
+        todo.ctx.forEach((ctx) => {
+          todoLists[ctx] ||= [];
+          todoLists[ctx].push(todo);
+        });
+      } else {
+        todoLists['@Default'] ||= [];
+        todoLists['@Default'].push(todo);
+      }
     }
   });
 
   // List filters:
   const handleChangePriorityFilter = (e: FormEvent<HTMLSelectElement>) => {
     setMinPriority(e.currentTarget.value);
+  };
+
+  // Organize by
+  const handleOrganizeBy = (e: FormEvent<HTMLSelectElement>) => {
+    setOrganizeBy(e.currentTarget.value === 'project' ? 'project' : 'context');
   };
 
   // Todo CrUD:
@@ -125,6 +158,15 @@ export const TodosView = (props: TodosViewProps) => {
             <option value="C">C</option>
             <option value="Z">All</option>
           </select>
+          <label htmlFor="organizeby-selector">View By</label>
+          <select
+            id="organizeby-selector"
+            onChange={handleOrganizeBy}
+            value={organizeBy}
+          >
+            <option value="project">Project</option>
+            <option value="context">Context</option>
+          </select>
           <button onClick={handleShowCreate}>New ToDo</button>
         </div>
       </div>
@@ -150,165 +192,6 @@ export const TodosView = (props: TodosViewProps) => {
           todoText={confirmEdit ? stringifyTodo(confirmEdit) : ''}
         />
       )}
-    </div>
-  );
-};
-
-interface CreateTodoProps {
-  onAdd: (t: string | null) => void;
-}
-
-const CreateTodoDialog = (props: CreateTodoProps) => {
-  const [value, setValue] = useState('');
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.currentTarget.value);
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      props.onAdd(value);
-      setValue('');
-      e.preventDefault();
-    } else if (e.key === 'Escape') {
-      props.onAdd(null);
-      setValue('');
-      e.preventDefault();
-    }
-  };
-
-  const handleAdd = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onAdd(value);
-    setValue('');
-    e.preventDefault();
-  };
-
-  const handleCancel = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onAdd(null);
-    setValue('');
-    e.preventDefault();
-  };
-
-  return (
-    <div onKeyUp={(e) => e.stopPropagation()}>
-      <div className="todo-dialog-bg">
-        <div className="todo-dialog">
-          <h3 className="todo-dialog-header">Enter a New ToDo:</h3>
-          <input
-            type="text"
-            className="todo-dialog-input"
-            autoFocus={true}
-            onKeyUp={handleKeyPress}
-            onChange={handleChange}
-            value={value}
-          />
-          <div className="todo-dialog-actions">
-            <button onClick={handleAdd}>Add</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface DeleteTodoProps {
-  onDelete: (t: boolean) => void;
-}
-
-const DeleteTodoDialog = (props: DeleteTodoProps) => {
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
-      props.onDelete(false);
-    } else if (e.key === 'y') {
-      props.onDelete(true);
-    } else if (e.key === 'n') {
-      props.onDelete(false);
-    }
-  };
-
-  const handleConfirm = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onDelete(true);
-    e.preventDefault();
-  };
-
-  const handleCancel = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onDelete(false);
-    e.preventDefault();
-  };
-
-  return (
-    <div onKeyUp={(e) => e.stopPropagation()}>
-      <div className="todo-dialog-bg">
-        <div className="todo-dialog" onKeyUp={handleKeyPress}>
-          <h3 className="todo-dialog-header">Confirm Delete:</h3>
-          <p>Are you sure you want to delete this todo?</p>
-          <div className="todo-dialog-actions">
-            <button onClick={handleConfirm} autoFocus={true}>
-              Confirm
-            </button>
-            <button onClick={handleCancel}>Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface EditTodoProps {
-  onEdit: (todoText: string | null) => void;
-  todoText: string;
-}
-
-const EditTodoDialog = (props: EditTodoProps) => {
-  const [value, setValue] = useState(props.todoText);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.currentTarget.value);
-  };
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      props.onEdit(value !== '' ? value : null);
-      setValue('');
-      e.preventDefault();
-    } else if (e.key === 'Escape') {
-      props.onEdit(null);
-      setValue('');
-      e.preventDefault();
-    }
-  };
-  const handleConfirm = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onEdit(value !== '' ? value : null);
-    setValue('');
-    e.preventDefault();
-  };
-
-  const handleCancel = (e: MouseEvent<HTMLButtonElement>) => {
-    props.onEdit(null);
-    setValue('');
-    e.preventDefault();
-  };
-
-  return (
-    <div onKeyUp={(e) => e.stopPropagation()}>
-      <div className="todo-dialog-bg">
-        <div className="todo-dialog">
-          <h3 className="todo-dialog-header">Edit Todo:</h3>
-          <input
-            type="text"
-            className="todo-dialog-input"
-            autoFocus={true}
-            onKeyUp={handleKeyPress}
-            onChange={handleChange}
-            value={value}
-          />
-          <div className="todo-dialog-actions">
-            <button onClick={handleConfirm}>Confirm</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

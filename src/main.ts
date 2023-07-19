@@ -10,12 +10,14 @@ import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
 
 interface TodotxtPluginSettings {
   defaultPriorityFilter: string;
+  defaultOrganizeBy: 'project' | 'context';
   defaultTodotxt: string;
   additionalExts: string[];
 }
 
 const DEFAULT_SETTINGS: TodotxtPluginSettings = {
   defaultPriorityFilter: 'B',
+  defaultOrganizeBy: 'project',
   defaultTodotxt: 'default',
   additionalExts: [],
 };
@@ -132,6 +134,20 @@ class TodoSettingTab extends PluginSettingTab {
           .setValue(this.plugin.settings.defaultPriorityFilter)
           .onChange(async (value) => {
             this.plugin.settings.defaultPriorityFilter = value;
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(settingsDiv)
+      .setName('Default Todo grouping')
+      .setDesc('By default, only Todos will be organized in lists by these.')
+      .addDropdown((dropdown) =>
+        dropdown
+          .addOptions({ project: 'Project', context: 'Context' })
+          .setValue(this.plugin.settings.defaultOrganizeBy)
+          .onChange(async (value) => {
+            this.plugin.settings.defaultOrganizeBy =
+              value === 'project' ? 'project' : 'context';
             await this.plugin.saveSettings();
           }),
       );

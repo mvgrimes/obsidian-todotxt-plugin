@@ -97,7 +97,23 @@
     color: var(--todotxt-color-gray-200);
   }
 
-  #todotxt .todo-description .todo-completed {
+  #todotxt .todo-description .todo-text span {
+      /* margin-right: 0.3em; */
+    }
+
+  #todotxt .todo-description .todo-due {
+      color: var(--todotxt-color-sky-600);
+    }
+
+  #todotxt .todo-description .todo-due-soon {
+      color: var(--todotxt-color-amber-600);
+    }
+
+  #todotxt .todo-description .todo-due-past {
+      color: var(--todotxt-color-red-600);
+    }
+
+  #todotxt .todo-description .todo-completed, #todotxt .todo-description .todo-completed span {
       text-decoration-line: line-through;
       color: var(--todotxt-color-gray-400);
     }

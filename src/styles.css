@@ -94,11 +94,26 @@
     align-items: flex-start;
     color: var(--todotxt-color-gray-200);
 
-    .todo-completed {
+    .todo-text span {
+      /* margin-right: 0.3em; */
+    }
+
+    .todo-due {
+      color: var(--todotxt-color-sky-600);
+    }
+    .todo-due-soon {
+      color: var(--todotxt-color-amber-600);
+    }
+    .todo-due-past {
+      color: var(--todotxt-color-red-600);
+    }
+
+    .todo-completed, .todo-completed span {
       text-decoration-line: line-through;
       color: var(--todotxt-color-gray-400);
     }
   }
+
 
   .todo-tag {
     font-size: 0.75rem;

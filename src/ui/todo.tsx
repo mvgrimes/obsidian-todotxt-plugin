@@ -4,6 +4,8 @@ import TrashIcon from './icon/trash';
 import type { TODO } from '../lib/todo';
 import cn from '../lib/classNames';
 
+const DUE_RE = RegExp('due:([0-9]{4}-[0-9]{2}-[0-9]{2})');
+
 type TodoProps = {
   tag: string;
   todo: TODO;
@@ -14,6 +16,45 @@ type TodoProps = {
 };
 export const Todo = (props: TodoProps) => {
   const { todo } = props;
+  const TODAY = new Date().toISOString();
+  const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
+  console.log(SOON);
+
+  const description = todo.description.split(/\s+/).map((c, i) => {
+    const match = c.match(DUE_RE);
+    if (match) {
+      if (match[1] > SOON) {
+        return (
+          <>
+            <span className="todo-due-soon" key={i}>
+              {c}
+            </span>{' '}
+          </>
+        );
+      } else if (match[1] > TODAY) {
+        return (
+          <>
+            <span className="todo-due" key={i}>
+              {c}
+            </span>{' '}
+          </>
+        );
+      } else {
+        return (
+          <>
+            <span className="todo-due-past" key={i}>
+              {c}
+            </span>{' '}
+          </>
+        );
+      }
+    }
+    return (
+      <>
+        <span key={i}>{c}</span>{' '}
+      </>
+    );
+  });
 
   return (
     <div className="todo">
@@ -43,8 +84,13 @@ export const Todo = (props: TodoProps) => {
         {/* <span>{todo.createDate}</span> */}
         <span className="todo-description">
           <span>
-            <span className={cn(todo.completed ? 'todo-completed' : '')}>
-              {todo.description}
+            <span
+              className={cn(
+                todo.completed ? 'todo-completed' : '',
+                'todo-text',
+              )}
+            >
+              {description}
             </span>
             {todo.tags
               .filter((tag) => tag !== props.tag)
@@ -62,7 +108,10 @@ export const Todo = (props: TodoProps) => {
               ))}
           </span>
           <span className="todo-actions">
-            <button className="clickable-icon" onClick={() => props.onEditClicked(todo)}>
+            <button
+              className="clickable-icon"
+              onClick={() => props.onEditClicked(todo)}
+            >
               <PencilIcon className="" />
             </button>
             <button

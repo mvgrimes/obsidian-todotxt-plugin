@@ -1,6 +1,6 @@
 {
   "name": "obsidian-sample-plugin",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "dist/main.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "css": "postcss -o ./dist/styles.css --watch ./src/styles.css",
     "cp": "nodemon --watch ./dist --ext js,json,css --exec bash -c 'cp dist/* $HOME/Notes/.obsidian/plugins/todotxt-plugin/'",
     "version": "node ./scripts/version-bump.mjs",
-    "release": "zx ./scripts/release.mjs",
+    "release": "yarn run build && zx ./scripts/release.mjs",
+    "deploy": "yarn run release",
     "pretty": "prettier --write 'src/**/*.{js,ts,jsx,tsx}'"
   },
   "keywords": [],

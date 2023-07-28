@@ -69,7 +69,7 @@ Helpful commands to run while developing:
 
 ## Thanks
 
-* Thanks to the authors of (todotxt)[https://github.com/todotxt].
-* Thanks to the authors of (SwiftoDo)[https://swiftodoapp.com/] for documenting
+* Thanks to the authors of [todotxt](https://github.com/todotxt).
+* Thanks to the authors of [SwiftoDo](https://swiftodoapp.com/) for documenting
   the due and recurring extensions to the spec.
 

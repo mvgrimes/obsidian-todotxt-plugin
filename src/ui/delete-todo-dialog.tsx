@@ -1,4 +1,5 @@
-import React, { type KeyboardEvent, type MouseEvent } from 'react';
+import * as React from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 
 interface DeleteTodoProps {
   onDelete: (t: boolean) => void;

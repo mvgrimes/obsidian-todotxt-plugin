@@ -1,11 +1,10 @@
 {
-  "id": "obsidian-todotxt-plugin",
-  "name": "TodoTxt",
-  "version": "1.0.0",
-  "minAppVersion": "0.15.0",
-  "description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-  "author": "Mark Grimes",
-  "authorUrl": "https://obsidian.md",
-  "fundingUrl": "https://obsidian.md/pricing",
-  "isDesktopOnly": false
+	"id": "todotxt",
+	"name": "TodoTxt",
+	"version": "1.2.2",
+	"minAppVersion": "0.15.0",
+	"description": "Manage Todo.txt files.",
+	"author": "Mark Grimes",
+	"authorUrl": "https://github.com/mvgrimes",
+	"isDesktopOnly": false
 }

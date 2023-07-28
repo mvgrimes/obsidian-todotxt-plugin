@@ -1,8 +1,9 @@
-import React, {
+import * as React from 'react';
+import {
   useState,
-  type KeyboardEvent,
-  type MouseEvent,
-  type ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+  ChangeEvent,
 } from 'react';
 
 interface CreateTodoProps {

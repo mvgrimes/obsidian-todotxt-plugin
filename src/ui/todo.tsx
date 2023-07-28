@@ -16,45 +16,6 @@ type TodoProps = {
 };
 export const Todo = (props: TodoProps) => {
   const { todo } = props;
-  const TODAY = new Date().toISOString();
-  const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
-  console.log(SOON);
-
-  const description = todo.description.split(/\s+/).map((c, i) => {
-    const match = c.match(DUE_RE);
-    if (match) {
-      if (match[1] > SOON) {
-        return (
-          <>
-            <span className="todo-due-soon" key={i}>
-              {c}
-            </span>{' '}
-          </>
-        );
-      } else if (match[1] > TODAY) {
-        return (
-          <>
-            <span className="todo-due" key={i}>
-              {c}
-            </span>{' '}
-          </>
-        );
-      } else {
-        return (
-          <>
-            <span className="todo-due-past" key={i}>
-              {c}
-            </span>{' '}
-          </>
-        );
-      }
-    }
-    return (
-      <>
-        <span key={i}>{c}</span>{' '}
-      </>
-    );
-  });
 
   return (
     <div className="todo">
@@ -90,7 +51,7 @@ export const Todo = (props: TodoProps) => {
                 'todo-text',
               )}
             >
-              {description}
+              <TodoDescription todo={todo} />
             </span>
             {todo.tags
               .filter((tag) => tag !== props.tag)
@@ -124,5 +85,34 @@ export const Todo = (props: TodoProps) => {
         </span>
       </label>
     </div>
+  );
+};
+
+const TodoDescription = ({ todo }: { todo: TODO }) => {
+  const TODAY = new Date().toISOString();
+  const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
+
+  return (
+    <>
+      {todo.description.split(/\s+/).map((c, i) => {
+        const match = c.match(DUE_RE);
+        const due = match ? match[1] : false;
+
+        const className =
+          due > SOON
+            ? 'todo-due'
+            : due > TODAY
+            ? 'todo-due-soon'
+            : match
+            ? 'todo-due-past'
+            : '';
+
+        return (
+          <React.Fragment key={i}>
+            <span className={className}>{c}</span>{' '}
+          </React.Fragment>
+        );
+      })}
+    </>
   );
 };

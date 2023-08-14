@@ -38,7 +38,7 @@
   }
 
   .todo-list-header {
-    border-bottom: 2px solid var(--todotxt-color-slate-700);
+    border-bottom: 2px solid var(--checkbox-color);
   }
 
   .todo-list {
@@ -60,7 +60,7 @@
 
   /* .todo:has(input:focus)  { */
   .todo:focus-within  {
-    border: 3px solid var(--todotxt-color-slate-700);
+    border: 3px solid var(--text-accent);
   }
 
   .todo-label {
@@ -92,7 +92,7 @@
   .todo-description {
     display: flex;
     align-items: flex-start;
-    color: var(--todotxt-color-gray-200);
+    color: var(--text-normal);
 
     .todo-text span {
       /* margin-right: 0.3em; */
@@ -110,7 +110,7 @@
 
     .todo-completed, .todo-completed span {
       text-decoration-line: line-through;
-      color: var(--todotxt-color-gray-400);
+      color: var(--text-muted);
     }
   }
 
@@ -139,7 +139,7 @@
     visibility: hidden;
     display: flex;
     gap: 0.125rem;
-    color: var(--todotxt-color-gray-600);
+    color: var(--text-faint);
 
     margin-left: 0.25rem;
 
@@ -159,7 +159,6 @@
   .todo-label:hover {
     .todo-actions {
       visibility: visible;
-      color: var(--todotxt-color-gray-300);
     }
   }
 
@@ -169,16 +168,16 @@
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: var(--todotxt-color-gray-900-9);
+    background-color: var(--background-primary);
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .todo-dialog {
     width: 66%;
-    border: 0.25rem solid var(--todotxt-color-indigo-900);
+    border: 0.25rem solid var(--background-secondary-alt);
     border-radius: 0.5rem;
-    background-color: var(--todotxt-color-gray-900);
+    background-color: var(--background-secondary);
     z-index: 20;
     padding: 0.5rem;
     margin: 1.5rem;

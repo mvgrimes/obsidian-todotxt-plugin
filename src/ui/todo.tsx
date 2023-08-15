@@ -30,13 +30,7 @@ export const Todo = (props: TodoProps) => {
         <span
           className={cn(
             'todo-priority',
-            todo.priority === 'A'
-              ? 'todo-priority-a'
-              : todo.priority === 'B'
-              ? 'todo-priority-b'
-              : todo.priority === 'C'
-              ? 'todo-priority-c'
-              : '',
+            todo.priority ? `todo-priority-${todo.priority.toLowerCase()}` : '',
           )}
         >
           {todo.priority}

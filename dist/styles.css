@@ -91,6 +91,23 @@
     background-color: var(--todotxt-color-sky-300);
   }
 
+  #todotxt .todo-priority-d {
+    color: var(--todotxt-color-amber-600);
+    background-color: var(--todotxt-color-gray-200);
+  }
+
+  #todotxt .todo-priority-e {
+    border: 1px solid var(--todotxt-color-gray-200);
+  }
+
+  #todotxt .todo-priority-f {
+    border: 1px solid var(--todotxt-color-gray-200);
+  }
+
+  #todotxt .todo-priority-g {
+    border: 1px solid var(--todotxt-color-gray-200);
+  }
+
   #todotxt .todo-description {
     display: flex;
     align-items: flex-start;

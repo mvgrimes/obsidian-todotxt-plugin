@@ -156,6 +156,7 @@ export const TodosView = (props: TodosViewProps) => {
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
+            <option value="D">D</option>
             <option value="Z">All</option>
           </select>
           <label htmlFor="organizeby-selector">View By</label>

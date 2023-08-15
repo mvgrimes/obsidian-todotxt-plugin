@@ -1,6 +1,6 @@
 import {
   App,
-  Notice,
+  // Notice,
   Plugin,
   PluginSettingTab,
   Setting,
@@ -130,7 +130,7 @@ class TodoSettingTab extends PluginSettingTab {
       )
       .addDropdown((dropdown) =>
         dropdown
-          .addOptions({ A: 'A', B: 'B', C: 'C', Z: 'All' })
+          .addOptions({ A: 'A', B: 'B', C: 'C', D: 'D', Z: 'All' })
           .setValue(this.plugin.settings.defaultPriorityFilter)
           .onChange(async (value) => {
             this.plugin.settings.defaultPriorityFilter = value;

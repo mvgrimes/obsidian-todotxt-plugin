@@ -26,20 +26,8 @@ export const TodosView = (props: TodosViewProps) => {
   // Get all the tags, plus add a +Default tag for untagged todos
   const todoTags =
     organizeBy === 'project'
-      ? [
-          '+Default',
-          ...props.todos
-            .flatMap((todo) => todo.tags)
-            .sort()
-            .unique(),
-        ]
-      : [
-          '@Default',
-          ...props.todos
-            .flatMap((todo) => todo.ctx)
-            .sort()
-            .unique(),
-        ];
+      ? ['+Default', ...unique(props.todos.flatMap((todo) => todo.tags).sort())]
+      : ['@Default', ...unique(props.todos.flatMap((todo) => todo.ctx).sort())];
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
@@ -52,7 +40,7 @@ export const TodosView = (props: TodosViewProps) => {
 
     if (organizeBy === 'project') {
       if (todo.tags.length > 0) {
-        todo.tags.unique().forEach((tag) => {
+        unique(todo.tags).forEach((tag) => {
           todoLists[tag] ||= [];
           todoLists[tag].push(todo);
         });
@@ -62,7 +50,7 @@ export const TodosView = (props: TodosViewProps) => {
       }
     } else {
       if (todo.ctx.length > 0) {
-        todo.ctx.unique().forEach((ctx) => {
+        unique(todo.ctx).forEach((ctx) => {
           todoLists[ctx] ||= [];
           todoLists[ctx].push(todo);
         });
@@ -196,3 +184,7 @@ export const TodosView = (props: TodosViewProps) => {
     </div>
   );
 };
+
+function unique<T>(array: T[]) {
+  return [...new Set(array)];
+}

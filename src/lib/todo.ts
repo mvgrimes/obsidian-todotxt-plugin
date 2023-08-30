@@ -5,7 +5,7 @@ export type TODO = {
   priority: string;
   createDate?: string;
   description: string;
-  tags: string[];
+  projects: string[];
   ctx: string[];
 };
 
@@ -40,7 +40,7 @@ export function parseTodo(line: string, id: number): TODO {
       completed: false,
       priority: '',
       description: `not parsed: ${line}`,
-      tags: [],
+      projects: [],
       ctx: [],
     };
   }
@@ -50,7 +50,7 @@ function extractTags(description: string) {
   // Don't use \w here for better unicode support
   // Per the todo.txt spec (https://github.com/todotxt/todo.txt), context/projects are preceded by a space
   return {
-    tags: matchAll(description, /(?<=\s)\+\S+/g),
+    projects: matchAll(description, /(?<=\s)\+\S+/g),
     ctx: matchAll(description, /(?<=\s)@\S+/g),
     description: description.replace(/\s+[@+]\S+/g, ''),
   };
@@ -69,7 +69,7 @@ export function stringifyTodo(todo: TODO) {
     todo.createDate,
     todo.description,
     todo.priority && todo.completed ? `pri:${todo.priority}` : null,
-    ...todo.tags,
+    ...todo.projects,
     ...todo.ctx,
   ]
     .filter((item) => item)

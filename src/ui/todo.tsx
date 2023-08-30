@@ -47,10 +47,10 @@ export const Todo = (props: TodoProps) => {
             >
               <TodoDescription todo={todo} />
             </span>
-            {todo.tags
+            {todo.projects
               .filter((tag) => tag !== props.tag)
               .map((tag, i) => (
-                <span className="todo-tag" key={tag + i}>
+                <span className="todo-project" key={tag + i}>
                   {tag}
                 </span>
               ))}

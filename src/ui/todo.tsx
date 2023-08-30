@@ -49,15 +49,15 @@ export const Todo = (props: TodoProps) => {
             </span>
             {todo.tags
               .filter((tag) => tag !== props.tag)
-              .map((tag) => (
-                <span className="todo-tag" key={tag}>
+              .map((tag, i) => (
+                <span className="todo-tag" key={tag + i}>
                   {tag}
                 </span>
               ))}
             {todo.ctx
               .filter((ctx) => ctx !== props.tag)
-              .map((ctx) => (
-                <span className="todo-ctx" key={ctx}>
+              .map((ctx, i) => (
+                <span className="todo-ctx" key={ctx + i}>
                   {ctx}
                 </span>
               ))}

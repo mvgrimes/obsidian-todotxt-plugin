@@ -52,7 +52,7 @@ export const TodosView = (props: TodosViewProps) => {
 
     if (organizeBy === 'project') {
       if (todo.tags.length > 0) {
-        todo.tags.forEach((tag) => {
+        todo.tags.unique().forEach((tag) => {
           todoLists[tag] ||= [];
           todoLists[tag].push(todo);
         });
@@ -62,7 +62,7 @@ export const TodosView = (props: TodosViewProps) => {
       }
     } else {
       if (todo.ctx.length > 0) {
-        todo.ctx.forEach((ctx) => {
+        todo.ctx.unique().forEach((ctx) => {
           todoLists[ctx] ||= [];
           todoLists[ctx].push(todo);
         });

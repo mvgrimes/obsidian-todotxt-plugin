@@ -79,6 +79,10 @@ export default class TodotxtPlugin extends Plugin {
     // this.registerInterval(
     //   window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
     // );
+
+    console.log(
+      `Todo.txt: version ${this.manifest.version} (requires Obsidian ${this.manifest.minAppVersion})`,
+    );
   }
 
   onunload() {}

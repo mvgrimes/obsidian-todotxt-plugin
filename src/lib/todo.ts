@@ -47,10 +47,12 @@ export function parseTodo(line: string, id: number): TODO {
 }
 
 function extractTags(description: string) {
+  // Don't use \w here for better unicode support
+  // Per the todo.txt spec (https://github.com/todotxt/todo.txt), context/projects are preceded by a space
   return {
-    tags: matchAll(description, /\+\w+/g),
-    ctx: matchAll(description, /@\w+/g),
-    description: description.replace(/ [@+]\w+/g, ''),
+    tags: matchAll(description, /(?<=\s)\+\S+/g),
+    ctx: matchAll(description, /(?<=\s)@\S+/g),
+    description: description.replace(/\s+[@+]\S+/g, ''),
   };
 }
 
@@ -79,7 +81,5 @@ export function sortTodo(a: TODO, b: TODO) {
   if (a.completed > b.completed) return 1;
   if ((a.priority || 'X') < (b.priority || 'X')) return -1;
   if ((a.priority || 'X') > (b.priority || 'X')) return 1;
-  if (a.description < b.description) return -1;
-  if (a.description > b.description) return 1;
-  return 0;
+  return a.description.localeCompare(b.description);
 }

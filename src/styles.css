@@ -136,6 +136,7 @@
     border-radius: 9999px;
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-blue-200);
+    white-space: nowrap;
   }
 
   .todo-ctx {
@@ -146,6 +147,7 @@
     border-radius: 9999px;
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-indigo-200);
+    white-space: nowrap;
   }
 
   .todo-actions {

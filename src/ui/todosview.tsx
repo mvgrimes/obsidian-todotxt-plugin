@@ -15,6 +15,7 @@ type TodosViewProps = {
 type OrganizeBy = 'project' | 'context';
 
 export const TodosView = (props: TodosViewProps) => {
+  const { todos } = props;
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<TODO | null>(null);
@@ -26,8 +27,8 @@ export const TodosView = (props: TodosViewProps) => {
   // Get all the tags, plus add a +Default tag for untagged todos
   const todoTags =
     organizeBy === 'project'
-      ? ['+Default', ...unique(props.todos.flatMap((todo) => todo.tags).sort())]
-      : ['@Default', ...unique(props.todos.flatMap((todo) => todo.ctx).sort())];
+      ? ['+Default', ...unique(todos.flatMap((todo) => todo.tags).sort(cmp))]
+      : ['@Default', ...unique(todos.flatMap((todo) => todo.ctx).sort(cmp))];
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
@@ -35,7 +36,7 @@ export const TodosView = (props: TodosViewProps) => {
   );
 
   // ... and populate them
-  props.todos.forEach((todo) => {
+  todos.forEach((todo) => {
     if ((todo.priority || 'Z') > minPriority) return;
 
     if (organizeBy === 'project') {
@@ -73,7 +74,7 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Todo CrUD:
   const handleCompleteToggle = (t: TODO) => {
-    const newTodos = [...props.todos];
+    const newTodos = [...todos];
     const todo = newTodos.find((todo) => todo.id === t.id) as TODO;
     todo.completed = !todo?.completed;
     if (todo.completed) {
@@ -85,10 +86,8 @@ export const TodosView = (props: TodosViewProps) => {
   };
   const handleDelete = (t: boolean) => {
     if (t) {
-      const newTodos = props.todos.filter(
-        (todo) => todo.id !== confirmDelete?.id,
-      );
-      if (props.todos.length !== newTodos.length && props.onChange)
+      const newTodos = todos.filter((todo) => todo.id !== confirmDelete?.id);
+      if (todos.length !== newTodos.length && props.onChange)
         props.onChange(newTodos);
     }
     setConfirmDelete(null);
@@ -96,7 +95,7 @@ export const TodosView = (props: TodosViewProps) => {
   const handleEdit = (todoText: string | null) => {
     if (confirmEdit && todoText !== null && todoText !== '') {
       const newTodo = parseTodo(todoText, confirmEdit.id);
-      const newTodos = props.todos.map((todo) =>
+      const newTodos = todos.map((todo) =>
         todo.id === confirmEdit.id ? newTodo : todo,
       );
       if (props.onChange) props.onChange(newTodos);
@@ -106,10 +105,10 @@ export const TodosView = (props: TodosViewProps) => {
   const handleAdd = (todoText: string | null) => {
     if (todoText !== null && todoText !== '') {
       // Parse the todo
-      const todo = parseTodo(todoText, props.todos.length);
+      const todo = parseTodo(todoText, todos.length);
       todo.createDate = new Date().toISOString().substring(0, 10);
       // Add the new todo to the todoList
-      const newTodos = [...props.todos, todo];
+      const newTodos = [...todos, todo];
       if (props.onChange) props.onChange(newTodos);
     }
     setConfirmCreate(false);
@@ -187,4 +186,8 @@ export const TodosView = (props: TodosViewProps) => {
 
 function unique<T>(array: T[]) {
   return [...new Set(array)];
+}
+
+function cmp(a: string, b: string) {
+  return a.localeCompare(b);
 }

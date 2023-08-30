@@ -1,12 +1,19 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
 .idea
 
-# npm
+# dependencies
 node_modules
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # Don't include the compiled main.js file in the repo.
 # They should be uploaded to GitHub releases instead.
@@ -20,4 +27,6 @@ data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+# Temporary file
 tmp/

@@ -107,10 +107,6 @@
     align-items: flex-start;
     color: var(--text-normal);
 
-    .todo-text span {
-      /* margin-right: 0.3em; */
-    }
-
     .todo-due {
       color: var(--todotxt-color-sky-600);
     }
@@ -137,8 +133,8 @@
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-blue-200);
     white-space: nowrap;
+    display: inline-block;
   }
-
   .todo-ctx {
     font-size: 0.75rem;
     line-height: 1rem;
@@ -148,6 +144,7 @@
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-indigo-200);
     white-space: nowrap;
+    display: inline-block;
   }
 
   .todo-actions {

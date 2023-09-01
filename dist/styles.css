@@ -114,10 +114,6 @@
     color: var(--text-normal);
   }
 
-  #todotxt .todo-description .todo-text span {
-      /* margin-right: 0.3em; */
-    }
-
   #todotxt .todo-description .todo-due {
       color: var(--todotxt-color-sky-600);
     }
@@ -144,6 +140,7 @@
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-blue-200);
     white-space: nowrap;
+    display: inline-block;
   }
 
   #todotxt .todo-ctx {
@@ -155,6 +152,7 @@
     color: var(--todotxt-color-gray-700);
     background-color: var(--todotxt-color-indigo-200);
     white-space: nowrap;
+    display: inline-block;
   }
 
   #todotxt .todo-actions {

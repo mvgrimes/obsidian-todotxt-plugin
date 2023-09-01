@@ -4,9 +4,16 @@ export type Todo = {
   completedDate?: string;
   priority: string;
   createDate?: string;
-  description: string;
+  description: string; // The description w/ tags
+  text: string; // The description w/o tags
   projects: string[];
   ctx: string[];
+  tags: TodoTag[];
+};
+
+export type TodoTag = {
+  key: string;
+  value: string;
 };
 
 // x 2020-11-19 2020-11-16 Pay Amex Cash Card Bill (Due Dec 11th) t:2020-11-21 +Home @Bills
@@ -31,6 +38,7 @@ export function parseTodo(line: string, id: number): Todo {
       priority: groups.priority ?? '',
       createDate: groups.secondDate ?? groups.firstDate,
       completedDate: groups.secondDate ? groups.firstDate : undefined,
+      description: groups.description,
       ...extractTags(groups.description),
     };
   } else {
@@ -39,9 +47,11 @@ export function parseTodo(line: string, id: number): Todo {
       id,
       completed: false,
       priority: '',
-      description: `not parsed: ${line}`,
+      description: line,
+      text: `error parsing: ${line}`,
       projects: [],
       ctx: [],
+      tags: [],
     };
   }
 }
@@ -52,13 +62,21 @@ function extractTags(description: string) {
   return {
     projects: matchAll(description, /(?<=\s)\+\S+/g),
     ctx: matchAll(description, /(?<=\s)@\S+/g),
-    description: description.replace(/\s+[@+]\S+/g, ''),
+    tags: matchTags(description),
+    text: description.replace(/\s+([@+]|\S+:)\S+/g, ''),
   };
 }
 
 function matchAll(s: string, re: RegExp) {
   const results = [...s.matchAll(re)];
   return results.map((r) => r[0]);
+}
+
+function matchTags(s: string) {
+  const results = [...s.matchAll(/(?<=\s)(\S+):(\S+)/g)];
+  return results.map((r) => {
+    return { key: r[1], value: r[2] };
+  });
 }
 
 export function stringifyTodo(todo: Todo) {
@@ -69,8 +87,6 @@ export function stringifyTodo(todo: Todo) {
     todo.createDate,
     todo.description,
     todo.priority && todo.completed ? `pri:${todo.priority}` : null,
-    ...todo.projects,
-    ...todo.ctx,
   ]
     .filter((item) => item)
     .join(' ');
@@ -81,5 +97,5 @@ export function sortTodo(a: Todo, b: Todo) {
   if (a.completed > b.completed) return 1;
   if ((a.priority || 'X') < (b.priority || 'X')) return -1;
   if ((a.priority || 'X') > (b.priority || 'X')) return 1;
-  return a.description.localeCompare(b.description);
+  return a.text.localeCompare(b.text);
 }

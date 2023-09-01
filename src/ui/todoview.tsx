@@ -1,10 +1,8 @@
 import * as React from 'react';
 import PencilIcon from './icon/pencil';
 import TrashIcon from './icon/trash';
-import type { Todo } from '../lib/todo';
+import type { Todo, TodoTag } from '../lib/todo';
 import cn from '../lib/classNames';
-
-const DUE_RE = RegExp('due:([0-9]{4}-[0-9]{2}-[0-9]{2})');
 
 type TodoViewProps = {
   tag: string;
@@ -45,8 +43,11 @@ export const TodoView = (props: TodoViewProps) => {
                 'todo-text',
               )}
             >
-              <TodoDescription todo={todo} />
+              {todo.text}
             </span>
+            {todo.tags.map((tag, i) => (
+              <TodoTag tag={tag} key={i} />
+            ))}
             {todo.projects
               .filter((tag) => tag !== props.tag)
               .map((tag, i) => (
@@ -82,31 +83,25 @@ export const TodoView = (props: TodoViewProps) => {
   );
 };
 
-const TodoDescription = ({ todo }: { todo: Todo }) => {
+const TodoTag = ({ tag }: { tag: TodoTag }) => {
   const TODAY = new Date().toISOString();
   const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
+  const classes = ['todo-tag'];
 
+  // Highlight late or pending tasks
+  if (tag.key === 'due') {
+    const due = tag.value;
+    if (due > SOON) {
+      classes.push('todo-due');
+    } else if (due > TODAY) {
+      classes.push('todo-due-soon');
+    } else {
+      classes.push('todo-due-past');
+    }
+  }
   return (
-    <>
-      {todo.description.split(/\s+/).map((c, i) => {
-        const match = c.match(DUE_RE);
-        const due = match ? match[1] : false;
-
-        const className =
-          due > SOON
-            ? 'todo-due'
-            : due > TODAY
-            ? 'todo-due-soon'
-            : match
-            ? 'todo-due-past'
-            : '';
-
-        return (
-          <React.Fragment key={i}>
-            <span className={className}>{c}</span>{' '}
-          </React.Fragment>
-        );
-      })}
-    </>
+    <span className={classes.join(' ')}>
+      {tag.key}:{tag.value}
+    </span>
   );
 };

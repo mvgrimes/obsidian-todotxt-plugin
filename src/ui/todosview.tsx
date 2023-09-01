@@ -5,6 +5,7 @@ import { TodosList } from './todoslist';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
 import { CreateTodoDialog } from './create-todo-dialog';
+import moment from 'moment';
 
 type TodosViewProps = {
   defaultPriorityFilter: string;
@@ -81,6 +82,7 @@ export const TodosView = (props: TodosViewProps) => {
       todo.completedDate = new Date().toISOString().substring(0, 10);
     } else {
       todo.completedDate = undefined;
+      // TODO: add the priority if "pri:*"
     }
     if (props.onChange) props.onChange(newTodos);
   };

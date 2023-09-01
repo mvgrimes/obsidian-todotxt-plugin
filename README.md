@@ -67,6 +67,9 @@ Helpful commands to run while developing:
   $ npm run css # compile css to ./dist via postcss
   $ npm run cp # copy files from ./dist to Obsidian plugins dir
 
+Using the moment package b/c Obsidian already requires it. Otherwise would use
+something lighter weight (like date-fns) or built-in.
+
 ## Thanks
 
 * Thanks to the authors of [todotxt](https://github.com/todotxt).

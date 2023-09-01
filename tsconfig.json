@@ -11,6 +11,7 @@
     "noImplicitAny": true,
     "jsx": "react",
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "importHelpers": true,
     "isolatedModules": true,
     "strictNullChecks": true,

@@ -131,6 +131,14 @@
       color: var(--text-muted);
     }
 
+  #todotxt .todo-tag {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-left: 0.5rem;
+    color: var(--text-muted);
+    display: inline-block;
+  }
+
   #todotxt .todo-project {
     font-size: 0.75rem;
     line-height: 1rem;

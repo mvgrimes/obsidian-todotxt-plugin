@@ -5,7 +5,6 @@ import { TodosList } from './todoslist';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
 import { CreateTodoDialog } from './create-todo-dialog';
-import moment from 'moment';
 
 type TodosViewProps = {
   defaultPriorityFilter: string;
@@ -77,12 +76,16 @@ export const TodosView = (props: TodosViewProps) => {
   const handleCompleteToggle = (t: Todo) => {
     const newTodos = [...todos];
     const todo = newTodos.find((todo) => todo.id === t.id) as Todo;
-    todo.completed = !todo?.completed;
-    if (todo.completed) {
+    if (!todo) return;
+
+    if (!todo.completed) {
       todo.complete();
+      const nextRecurring = todo.recurring(newTodos.length);
+      if (nextRecurring) newTodos.push(nextRecurring);
     } else {
       todo.uncomplete();
     }
+
     if (props.onChange) props.onChange(newTodos);
   };
   const handleDelete = (t: boolean) => {

@@ -43,7 +43,7 @@ export const TodoView = (props: TodoViewProps) => {
                 todo.preThreshold() ? 'todo-prethreshold' : '',
               )}
             >
-              {todo.text}
+              {todo.description}
             </span>
             {todo.tags.map((tag, i) => (
               <TodoTagView tag={tag} key={i} />
@@ -99,6 +99,7 @@ const TodoTagView = ({ tag }: { tag: TodoTag }) => {
       classes.push('todo-due-past');
     }
   }
+
   return (
     <span className={classes.join(' ')}>
       {tag.key}:{tag.value}

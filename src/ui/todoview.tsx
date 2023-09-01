@@ -40,7 +40,7 @@ export const TodoView = (props: TodoViewProps) => {
             <span
               className={cn(
                 todo.completed ? 'todo-completed' : '',
-                'todo-text',
+                todo.preThreshold() ? 'todo-prethreshold' : '',
               )}
             >
               {todo.text}

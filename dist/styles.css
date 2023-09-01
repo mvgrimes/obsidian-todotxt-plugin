@@ -126,7 +126,11 @@
       color: var(--todotxt-color-red-600);
     }
 
-  #todotxt .todo-description .todo-completed, #todotxt .todo-description .todo-completed span {
+  #todotxt .todo-description .todo-prethreshold {
+      color: var(--text-muted);
+    }
+
+  #todotxt .todo-description .todo-completed {
       text-decoration-line: line-through;
       color: var(--text-muted);
     }

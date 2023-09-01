@@ -117,6 +117,16 @@ export class Todo {
     }
   }
 
+  preThreshold() {
+    const thresholdTag = this.tags.find((tag) => tag.key === 't');
+    if (!thresholdTag) return false;
+
+    const today = (this.completedDate = new Date()
+      .toISOString()
+      .substring(0, 10));
+    return thresholdTag.value > today;
+  }
+
   toString() {
     return [
       this.completed ? 'x' : null,

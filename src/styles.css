@@ -117,7 +117,11 @@
       color: var(--todotxt-color-red-600);
     }
 
-    .todo-completed, .todo-completed span {
+    .todo-prethreshold {
+      color: var(--text-muted);
+    }
+
+    .todo-completed {
       text-decoration-line: line-through;
       color: var(--text-muted);
     }

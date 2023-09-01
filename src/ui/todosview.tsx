@@ -79,10 +79,9 @@ export const TodosView = (props: TodosViewProps) => {
     const todo = newTodos.find((todo) => todo.id === t.id) as Todo;
     todo.completed = !todo?.completed;
     if (todo.completed) {
-      todo.completedDate = new Date().toISOString().substring(0, 10);
+      todo.complete();
     } else {
-      todo.completedDate = undefined;
-      // TODO: add the priority if "pri:*"
+      todo.uncomplete();
     }
     if (props.onChange) props.onChange(newTodos);
   };

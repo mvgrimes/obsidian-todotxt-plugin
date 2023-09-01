@@ -1,10 +1,8 @@
-export type TodoTag = {
-  key: string;
-  value: string;
-};
-
-// x 2020-11-19 2020-11-16 Pay Amex Cash Card Bill (Due Dec 11th) t:2020-11-21 +Home @Bills
-// (B) 2020-11-17 Update Mac systems +Home
+// The pattern for a todotxt entry
+// See: https://github.com/todotxt/todo.txt
+// Examples:
+//   x 2020-11-19 2020-11-16 Pay Amex Cash Card Bill (Due Dec 11th) t:2020-11-21 +Home @Bills
+//   (B) 2020-11-17 Update Mac systems +Home
 const TODO_RE = RegExp(
   '^' +
     '((?<completed>x) )?' +
@@ -14,6 +12,13 @@ const TODO_RE = RegExp(
     '(?<description>.*?)' +
     '$',
 );
+
+export class TodoTag {
+  constructor(public key: string, public value: string) {}
+  toString() {
+    return `${this.key}:${this.value}`;
+  }
+}
 
 type TodoArgs = {
   id: number;
@@ -86,14 +91,42 @@ export class Todo {
     }
   }
 
+  complete() {
+    this.completedDate = new Date().toISOString().substring(0, 10);
+
+    // If there is a priority, create a pri: tag to store it
+    // TODO: make this configurable
+    if (this.priority?.length > 0) {
+      const priorityTag = this.tags.find((tag) => tag.key === 'pri');
+      if (priorityTag) {
+        priorityTag.value = this.priority;
+      } else {
+        this.tags.push(new TodoTag('pri', this.priority));
+      }
+    }
+  }
+
+  uncomplete() {
+    this.completedDate = undefined;
+
+    // If there is a pri:X tag, use that to set the priority then remote all the pri: tags.
+    const priorityTag = this.tags.find((tag) => tag.key === 'pri');
+    if (priorityTag && priorityTag.value.length === 1) {
+      this.priority = priorityTag.value.toUpperCase();
+      this.tags = this.tags.filter((tag) => tag.key !== 'pri');
+    }
+  }
+
   toString() {
     return [
       this.completed ? 'x' : null,
       this.priority && !this.completed ? `(${this.priority})` : null,
       this.completedDate,
       this.createDate,
-      this.description,
-      this.priority && this.completed ? `pri:${this.priority}` : null,
+      this.text,
+      ...this.tags.map((tag) => tag.toString()),
+      ...this.projects.map((tag) => tag.toString()),
+      ...this.ctx.map((tag) => tag.toString()),
     ]
       .filter((item) => item)
       .join(' ');
@@ -131,6 +164,6 @@ function matchAll(s: string, re: RegExp) {
 function matchTags(s: string) {
   const results = [...s.matchAll(/(?<=\s)(\S+):(\S+)/g)];
   return results.map((r) => {
-    return { key: r[1], value: r[2] };
+    return new TodoTag(r[1], r[2]);
   });
 }

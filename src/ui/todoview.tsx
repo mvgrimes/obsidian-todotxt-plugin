@@ -46,7 +46,7 @@ export const TodoView = (props: TodoViewProps) => {
               {todo.text}
             </span>
             {todo.tags.map((tag, i) => (
-              <TodoTag tag={tag} key={i} />
+              <TodoTagView tag={tag} key={i} />
             ))}
             {todo.projects
               .filter((tag) => tag !== props.tag)
@@ -83,7 +83,7 @@ export const TodoView = (props: TodoViewProps) => {
   );
 };
 
-const TodoTag = ({ tag }: { tag: TodoTag }) => {
+const TodoTagView = ({ tag }: { tag: TodoTag }) => {
   const TODAY = new Date().toISOString();
   const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
   const classes = ['todo-tag'];

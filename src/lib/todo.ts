@@ -86,26 +86,29 @@ export class Todo {
     }
   }
 
-  complete() {
+  complete(preservePriority: boolean) {
     this.completed = true;
     this.completedDate = new Date().toISOString().substring(0, 10);
 
-    // If there is a priority, create a pri: tag to store it
-    // TODO: make this configurable
-    if (this.priority?.length > 0) {
-      this.setTag('pri', this.priority);
+    if (preservePriority) {
+      // If there is a priority, create a pri: tag to store it
+      if (this.priority?.length > 0) {
+        this.setTag('pri', this.priority);
+      }
     }
   }
 
-  uncomplete() {
+  uncomplete(preservePriority: boolean) {
     this.completed = false;
     this.completedDate = undefined;
 
-    // If there is a pri:X tag, use that to set the priority then remove all the pri: tags.
-    const priorityTag = this.getTag('pri');
-    if (priorityTag && priorityTag.value.length === 1) {
-      this.priority = priorityTag.value.toUpperCase();
-      this.tags = this.tags.filter((tag) => tag.key !== 'pri');
+    if (preservePriority) {
+      // If there is a pri:X tag, use that to set the priority then remove all the pri: tags.
+      const priorityTag = this.getTag('pri');
+      if (priorityTag && priorityTag.value.length === 1) {
+        this.priority = priorityTag.value.toUpperCase();
+        this.tags = this.tags.filter((tag) => tag.key !== 'pri');
+      }
     }
   }
 

@@ -13,6 +13,8 @@ interface TodotxtPluginSettings {
   defaultOrganizeBy: 'project' | 'context';
   defaultTodotxt: string;
   additionalExts: string[];
+  recurringTasks: boolean;
+  preservePriority: boolean;
 }
 
 const DEFAULT_SETTINGS: TodotxtPluginSettings = {
@@ -20,6 +22,8 @@ const DEFAULT_SETTINGS: TodotxtPluginSettings = {
   defaultOrganizeBy: 'project',
   defaultTodotxt: 'default',
   additionalExts: [],
+  recurringTasks: false,
+  preservePriority: true,
 };
 
 export default class TodotxtPlugin extends Plugin {
@@ -166,6 +170,35 @@ class TodoSettingTab extends PluginSettingTab {
         'Warning: These features are considered experimental and may change or be removed from future versions.' +
         '(Click to expand.)',
     });
+
+    new Setting(expDiv)
+      .setName('Preserve tast priorities when completed')
+      .setDesc(
+        `According to the todotxt spec, priorities are typically discarded when a task is completed. ` +
+          `This feature will save the priority (as a "pri:X" tag). If the task is "uncompleted" the priority will be restored.`,
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.preservePriority)
+          .onChange(async (value) => {
+            this.plugin.settings.preservePriority = value;
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(expDiv)
+      .setName('Support for recurring tasks')
+      .setDesc(
+        `When completing tasks with the rec: tag, create a new task based. This is not part of the todotxt spec.`,
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.recurringTasks)
+          .onChange(async (value) => {
+            this.plugin.settings.recurringTasks = value;
+            await this.plugin.saveSettings();
+          }),
+      );
 
     new Setting(expDiv)
       .setName('Additional TodoTxt extension')

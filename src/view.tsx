@@ -60,16 +60,16 @@ export class TodotxtView extends TextFileView {
   }
 
   refresh() {
+    const settings = this.plugin?.settings;
+
     this.root.render(
       <TodosView
         todos={this.todoData}
         onChange={this.update.bind(this)}
-        defaultPriorityFilter={
-          this.plugin?.settings?.defaultPriorityFilter || 'B'
-        }
-        defaultOrganizeBy={
-          this.plugin?.settings?.defaultOrganizeBy || 'project'
-        }
+        defaultPriorityFilter={settings?.defaultPriorityFilter || 'B'}
+        defaultOrganizeBy={settings?.defaultOrganizeBy || 'project'}
+        preservePriority={settings?.preservePriority ?? true}
+        recurringTasks={settings?.recurringTasks ?? false}
       />,
     );
   }

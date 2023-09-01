@@ -7,10 +7,12 @@ import { DeleteTodoDialog } from './delete-todo-dialog';
 import { CreateTodoDialog } from './create-todo-dialog';
 
 type TodosViewProps = {
-  defaultPriorityFilter: string;
-  defaultOrganizeBy: 'project' | 'context';
   todos: Todo[];
   onChange: (t: Todo[]) => void;
+  defaultPriorityFilter: string;
+  defaultOrganizeBy: 'project' | 'context';
+  preservePriority: boolean;
+  recurringTasks: boolean;
 };
 type OrganizeBy = 'project' | 'context';
 
@@ -79,11 +81,13 @@ export const TodosView = (props: TodosViewProps) => {
     if (!todo) return;
 
     if (!todo.completed) {
-      todo.complete();
-      const nextRecurring = todo.recurring(newTodos.length);
-      if (nextRecurring) newTodos.push(nextRecurring);
+      todo.complete(props.preservePriority);
+      if (props.recurringTasks) {
+        const nextRecurring = todo.recurring(newTodos.length);
+        if (nextRecurring) newTodos.push(nextRecurring);
+      }
     } else {
-      todo.uncomplete();
+      todo.uncomplete(props.preservePriority);
     }
 
     if (props.onChange) props.onChange(newTodos);

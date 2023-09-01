@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { sortTodo, type TODO } from '../lib/todo';
-import { Todo } from './todo';
+import { TodoView } from './todoview';
 
-type TodoListProps = {
+type TodosListProps = {
   tag: string;
   todos: TODO[];
   onCompleteToggle: (t: TODO) => void;
@@ -10,7 +10,7 @@ type TodoListProps = {
   onEditClicked: (t: TODO) => void;
 };
 
-export const TodoList = (props: TodoListProps) => {
+export const TodosList = (props: TodosListProps) => {
   const sorted = [...props.todos].sort(sortTodo);
 
   const handleKeyPress = (
@@ -27,7 +27,7 @@ export const TodoList = (props: TodoListProps) => {
   return (
     <div className="todo-list">
       {sorted?.map((todo) => (
-        <Todo
+        <TodoView
           tag={props.tag}
           todo={todo}
           onCompleteToggle={props.onCompleteToggle}

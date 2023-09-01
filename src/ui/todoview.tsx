@@ -6,7 +6,7 @@ import cn from '../lib/classNames';
 
 const DUE_RE = RegExp('due:([0-9]{4}-[0-9]{2}-[0-9]{2})');
 
-type TodoProps = {
+type TodoViewProps = {
   tag: string;
   todo: TODO;
   onCompleteToggle: (t: TODO) => void;
@@ -14,7 +14,7 @@ type TodoProps = {
   onEditClicked: (t: TODO) => void;
   onKeyPressed: (e: React.KeyboardEvent<HTMLInputElement>, t: TODO) => void;
 };
-export const Todo = (props: TodoProps) => {
+export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
 
   return (

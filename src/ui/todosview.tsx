@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { parseTodo, stringifyTodo, type TODO } from '../lib/todo';
-import { TodoList } from './todolist';
+import { TodosList } from './todoslist';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
 import { CreateTodoDialog } from './create-todo-dialog';
@@ -162,7 +162,7 @@ export const TodosView = (props: TodosViewProps) => {
         {todoTags.map((tag) => (
           <section key={tag}>
             <h3 className="todo-list-header">{tag}</h3>
-            <TodoList
+            <TodosList
               tag={tag}
               todos={todoLists[tag]}
               onCompleteToggle={handleCompleteToggle}

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { sortTodo, type TODO } from '../lib/todo';
+import { sortTodo, type Todo } from '../lib/todo';
 import { TodoView } from './todoview';
 
 type TodosListProps = {
   tag: string;
-  todos: TODO[];
-  onCompleteToggle: (t: TODO) => void;
-  onDeleteClicked: (t: TODO) => void;
-  onEditClicked: (t: TODO) => void;
+  todos: Todo[];
+  onCompleteToggle: (t: Todo) => void;
+  onDeleteClicked: (t: Todo) => void;
+  onEditClicked: (t: Todo) => void;
 };
 
 export const TodosList = (props: TodosListProps) => {
@@ -15,7 +15,7 @@ export const TodosList = (props: TodosListProps) => {
 
   const handleKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    t: TODO,
+    t: Todo,
   ) => {
     if (e.key === 'e' || e.key === 'Enter') {
       props.onEditClicked(t);

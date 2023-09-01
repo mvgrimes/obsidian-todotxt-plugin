@@ -2,13 +2,13 @@ import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { TextFileView, WorkspaceLeaf } from 'obsidian';
 import { TodosView } from './ui/todosview';
-import { parseTodo, stringifyTodo, type TODO } from './lib/todo';
+import { parseTodo, stringifyTodo, type Todo } from './lib/todo';
 import TodotxtPlugin from './main';
 
 export const VIEW_TYPE_TODOTXT = 'todotxt-view';
 
 export class TodotxtView extends TextFileView {
-  todoData: TODO[];
+  todoData: Todo[];
   fileFormat: 'unix' | 'dos' = 'unix';
   root: Root;
   plugin: TodotxtPlugin;
@@ -18,13 +18,13 @@ export class TodotxtView extends TextFileView {
     this.plugin = plugin;
   }
 
-  // Convert from TODO[] to string before writing to disk
+  // Convert from Todo[] to string before writing to disk
   getViewData() {
     const lineSep = this.fileFormat === 'dos' ? '\r\n' : '\n';
     return this.todoData.map(stringifyTodo).join(lineSep);
   }
 
-  // Convert string from disk to TODO[]
+  // Convert string from disk to Todo[]
   setViewData(data: string, clear: boolean) {
     if (data.match(/\r\n/)) this.fileFormat = 'dos';
 
@@ -52,7 +52,7 @@ export class TodotxtView extends TextFileView {
     return VIEW_TYPE_TODOTXT;
   }
 
-  update(todos: TODO[]) {
+  update(todos: Todo[]) {
     // console.log(`[TodoTxt] update`, { todos });
     this.todoData = todos;
     this.refresh();

@@ -1,4 +1,4 @@
-export type TODO = {
+export type Todo = {
   id: number;
   completed: boolean;
   completedDate?: string;
@@ -21,7 +21,7 @@ const TODO_RE = RegExp(
     '$',
 );
 
-export function parseTodo(line: string, id: number): TODO {
+export function parseTodo(line: string, id: number): Todo {
   const result = TODO_RE.exec(line);
   const groups = result?.groups;
   if (groups) {
@@ -61,7 +61,7 @@ function matchAll(s: string, re: RegExp) {
   return results.map((r) => r[0]);
 }
 
-export function stringifyTodo(todo: TODO) {
+export function stringifyTodo(todo: Todo) {
   return [
     todo.completed ? 'x' : null,
     todo.priority && !todo.completed ? `(${todo.priority})` : null,
@@ -76,7 +76,7 @@ export function stringifyTodo(todo: TODO) {
     .join(' ');
 }
 
-export function sortTodo(a: TODO, b: TODO) {
+export function sortTodo(a: Todo, b: Todo) {
   if (a.completed < b.completed) return -1;
   if (a.completed > b.completed) return 1;
   if ((a.priority || 'X') < (b.priority || 'X')) return -1;

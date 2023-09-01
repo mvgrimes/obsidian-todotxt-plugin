@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
-import { parseTodo, stringifyTodo, type TODO } from '../lib/todo';
+import { parseTodo, stringifyTodo, type Todo } from '../lib/todo';
 import { TodosList } from './todoslist';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
@@ -9,8 +9,8 @@ import { CreateTodoDialog } from './create-todo-dialog';
 type TodosViewProps = {
   defaultPriorityFilter: string;
   defaultOrganizeBy: 'project' | 'context';
-  todos: TODO[];
-  onChange: (t: TODO[]) => void;
+  todos: Todo[];
+  onChange: (t: Todo[]) => void;
 };
 type OrganizeBy = 'project' | 'context';
 
@@ -18,8 +18,8 @@ export const TodosView = (props: TodosViewProps) => {
   const { todos } = props;
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState<TODO | null>(null);
-  const [confirmEdit, setConfirmEdit] = useState<TODO | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Todo | null>(null);
+  const [confirmEdit, setConfirmEdit] = useState<Todo | null>(null);
   const [organizeBy, setOrganizeBy] = useState<OrganizeBy>(
     props.defaultOrganizeBy,
   );
@@ -32,7 +32,7 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
-    todoTags.map((tag) => [tag, [] as TODO[]]),
+    todoTags.map((tag) => [tag, [] as Todo[]]),
   );
 
   // ... and populate them
@@ -73,9 +73,9 @@ export const TodosView = (props: TodosViewProps) => {
   };
 
   // Todo CrUD:
-  const handleCompleteToggle = (t: TODO) => {
+  const handleCompleteToggle = (t: Todo) => {
     const newTodos = [...todos];
-    const todo = newTodos.find((todo) => todo.id === t.id) as TODO;
+    const todo = newTodos.find((todo) => todo.id === t.id) as Todo;
     todo.completed = !todo?.completed;
     if (todo.completed) {
       todo.completedDate = new Date().toISOString().substring(0, 10);
@@ -126,8 +126,8 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Display the dialog
   const handleShowCreate = () => setConfirmCreate(true);
-  const handleShowEdit = (t: TODO | null) => setConfirmEdit(t);
-  const handleShowDelete = (t: TODO | null) => setConfirmDelete(t);
+  const handleShowEdit = (t: Todo | null) => setConfirmEdit(t);
+  const handleShowDelete = (t: Todo | null) => setConfirmDelete(t);
 
   return (
     <div id="todotxt" onKeyUp={handleKeyPress}>

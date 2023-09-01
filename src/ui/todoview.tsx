@@ -1,18 +1,18 @@
 import * as React from 'react';
 import PencilIcon from './icon/pencil';
 import TrashIcon from './icon/trash';
-import type { TODO } from '../lib/todo';
+import type { Todo } from '../lib/todo';
 import cn from '../lib/classNames';
 
 const DUE_RE = RegExp('due:([0-9]{4}-[0-9]{2}-[0-9]{2})');
 
 type TodoViewProps = {
   tag: string;
-  todo: TODO;
-  onCompleteToggle: (t: TODO) => void;
-  onDeleteClicked: (t: TODO) => void;
-  onEditClicked: (t: TODO) => void;
-  onKeyPressed: (e: React.KeyboardEvent<HTMLInputElement>, t: TODO) => void;
+  todo: Todo;
+  onCompleteToggle: (t: Todo) => void;
+  onDeleteClicked: (t: Todo) => void;
+  onEditClicked: (t: Todo) => void;
+  onKeyPressed: (e: React.KeyboardEvent<HTMLInputElement>, t: Todo) => void;
 };
 export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
@@ -82,7 +82,7 @@ export const TodoView = (props: TodoViewProps) => {
   );
 };
 
-const TodoDescription = ({ todo }: { todo: TODO }) => {
+const TodoDescription = ({ todo }: { todo: Todo }) => {
   const TODAY = new Date().toISOString();
   const SOON = new Date(Date.now() + 24 * 60 * 60 * 1000 * 3).toISOString(); // Three days
 

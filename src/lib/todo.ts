@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { DateTime, Duration } from 'luxon';
 
 // The pattern for a todotxt entry
 // See: https://github.com/todotxt/todo.txt
@@ -110,7 +110,7 @@ export class Todo {
   }
 
   preThreshold() {
-    const thresholdTag = this.tags.find((tag) => tag.key === 't');
+    const thresholdTag = this.getTag('t');
     if (!thresholdTag) return false;
 
     const today = (this.completedDate = new Date()
@@ -127,24 +127,31 @@ export class Todo {
     if (!recurrance) return false; // TODO: notify of a failed recurrance
 
     const [_, strict, n, datePart] = recurrance;
-    const duration = mapRecDurationToMomentDuration(datePart);
+    const duration = getDuration(+n, datePart);
     if (!duration) return false; // TODO: notify of a failed recurrance
 
-    const due = this.getNextDueDate(!!strict, +n, duration);
-
     const newTodo = this.clone(id);
-    newTodo.setTag('due', due);
+    newTodo.setNextDueDate(!!strict, duration);
+    newTodo.setNextThresholdDate(this);
     return newTodo;
   }
 
   getDueDate() {
-    const dueTag = this.getTag('due');
-    if (!dueTag) return;
-    return moment(dueTag.value, 'YYYY-MM-DD');
+    return this.getTagAsDate('due');
+  }
+  getThresholdDate() {
+    return this.getTagAsDate('t');
   }
 
-  getNextDueDate(strict: boolean, n: number, duration: 'd' | 'w' | 'M' | 'y') {
-    let start = moment(); // now
+  getTagAsDate(key: string) {
+    const tag = this.getTag(key);
+    if (!tag) return;
+    return DateTime.fromFormat(tag.value, 'yyyy-MM-dd');
+  }
+
+  // moment.js should only be used here (needed for the duration)
+  setNextDueDate(strict: boolean, duration: any) {
+    let start = DateTime.now();
 
     if (strict) {
       const currentDueDate = this.getDueDate();
@@ -152,7 +159,24 @@ export class Todo {
       // TODO: notify about failed due date parsing?
     }
 
-    return start.add(n, duration).format('YYYY-MM-DD');
+    const due = start.plus(duration).toISODate();
+    if (!due) return; // TODO: notify failed addition?
+    this.setTag('due', due);
+  }
+
+  setNextThresholdDate(from: Todo) {
+    const thresholdDate = from.getThresholdDate();
+    if (!thresholdDate) return;
+
+    const dueDate = from.getDueDate() || DateTime.now();
+
+    const duration = dueDate.diff(thresholdDate);
+    const newDueDate = this.getDueDate();
+    if (!newDueDate) return; // Should have set the due date already
+
+    const newThreshold = newDueDate.minus(duration).toISODate();
+    if (!newThreshold) return; // TODO: notify about failure?
+    this.setTag('t', newThreshold);
   }
 
   // Set an existing tag to the given value. Create the tag if it doesn't exist.
@@ -242,16 +266,16 @@ function matchTags(s: string) {
   });
 }
 
-function mapRecDurationToMomentDuration(datePart: string) {
+function getDuration(n: number, datePart: string) {
   return datePart === 'd'
-    ? 'd'
+    ? Duration.fromObject({ days: n })
     : datePart === 'b'
-    ? 'd'
+    ? Duration.fromObject({ days: n })
     : datePart === 'w'
-    ? 'w'
+    ? Duration.fromObject({ weeks: n })
     : datePart === 'm'
-    ? 'M'
+    ? Duration.fromObject({ months: n })
     : datePart === 'y'
-    ? 'y'
+    ? Duration.fromObject({ years: n })
     : null;
 }

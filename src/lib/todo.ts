@@ -1,16 +1,3 @@
-export type Todo = {
-  id: number;
-  completed: boolean;
-  completedDate?: string;
-  priority: string;
-  createDate?: string;
-  description: string; // The description w/ tags
-  text: string; // The description w/o tags
-  projects: string[];
-  ctx: string[];
-  tags: TodoTag[];
-};
-
 export type TodoTag = {
   key: string;
   value: string;
@@ -28,32 +15,101 @@ const TODO_RE = RegExp(
     '$',
 );
 
-export function parseTodo(line: string, id: number): Todo {
-  const result = TODO_RE.exec(line);
-  const groups = result?.groups;
-  if (groups) {
-    return {
-      id,
-      completed: !!groups.completed,
-      priority: groups.priority ?? '',
-      createDate: groups.secondDate ?? groups.firstDate,
-      completedDate: groups.secondDate ? groups.firstDate : undefined,
-      description: groups.description,
-      ...extractTags(groups.description),
-    };
-  } else {
-    console.error(`[TodoTxt] setViewData: cannot match todo`, line);
-    return {
-      id,
-      completed: false,
-      priority: '',
-      description: line,
-      text: `error parsing: ${line}`,
-      projects: [],
-      ctx: [],
-      tags: [],
-    };
+type TodoArgs = {
+  id: number;
+  line: string;
+  completed: boolean;
+  completedDate?: string;
+  priority: string;
+  createDate?: string;
+  description: string; // The description w/ tags
+  text: string; // The description w/o tags
+  projects: string[];
+  ctx: string[];
+  tags: TodoTag[];
+};
+
+export class Todo {
+  id: number;
+  line: string;
+  completed: boolean;
+  completedDate?: string;
+  priority: string;
+  createDate?: string;
+  description: string; // The description w/ tags
+  text: string; // The description w/o tags
+  projects: string[];
+  ctx: string[];
+  tags: TodoTag[];
+
+  constructor(args: TodoArgs) {
+    this.id = args.id;
+    this.line = args.line;
+    this.completed = args.completed;
+    this.completedDate = args.completedDate;
+    this.priority = args.priority;
+    this.createDate = args.createDate;
+    this.description = args.description;
+    this.text = args.text;
+    this.projects = args.projects;
+    this.ctx = args.ctx;
+    this.tags = args.tags;
   }
+
+  static parse(line: string, id: number): Todo {
+    const result = TODO_RE.exec(line);
+    const groups = result?.groups;
+    if (groups) {
+      return new Todo({
+        id,
+        line,
+        completed: !!groups.completed,
+        priority: groups.priority ?? '',
+        createDate: groups.secondDate ?? groups.firstDate,
+        completedDate: groups.secondDate ? groups.firstDate : undefined,
+        description: groups.description,
+        ...extractTags(groups.description),
+      });
+    } else {
+      console.error(`[TodoTxt] setViewData: cannot match todo`, line);
+      return new Todo({
+        id,
+        line,
+        completed: false,
+        priority: '',
+        description: line,
+        text: `error parsing: ${line}`,
+        projects: [],
+        ctx: [],
+        tags: [],
+      });
+    }
+  }
+
+  toString() {
+    return [
+      this.completed ? 'x' : null,
+      this.priority && !this.completed ? `(${this.priority})` : null,
+      this.completedDate,
+      this.createDate,
+      this.description,
+      this.priority && this.completed ? `pri:${this.priority}` : null,
+    ]
+      .filter((item) => item)
+      .join(' ');
+  }
+
+  sort(t: Todo) {
+    return sortTodo(this, t);
+  }
+}
+
+export function sortTodo(a: Todo, b: Todo) {
+  if (a.completed < b.completed) return -1;
+  if (a.completed > b.completed) return 1;
+  if ((a.priority || 'X') < (b.priority || 'X')) return -1;
+  if ((a.priority || 'X') > (b.priority || 'X')) return 1;
+  return a.text.localeCompare(b.text);
 }
 
 function extractTags(description: string) {
@@ -77,25 +133,4 @@ function matchTags(s: string) {
   return results.map((r) => {
     return { key: r[1], value: r[2] };
   });
-}
-
-export function stringifyTodo(todo: Todo) {
-  return [
-    todo.completed ? 'x' : null,
-    todo.priority && !todo.completed ? `(${todo.priority})` : null,
-    todo.completedDate,
-    todo.createDate,
-    todo.description,
-    todo.priority && todo.completed ? `pri:${todo.priority}` : null,
-  ]
-    .filter((item) => item)
-    .join(' ');
-}
-
-export function sortTodo(a: Todo, b: Todo) {
-  if (a.completed < b.completed) return -1;
-  if (a.completed > b.completed) return 1;
-  if ((a.priority || 'X') < (b.priority || 'X')) return -1;
-  if ((a.priority || 'X') > (b.priority || 'X')) return 1;
-  return a.text.localeCompare(b.text);
 }

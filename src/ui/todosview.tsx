@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
-import { parseTodo, stringifyTodo, type Todo } from '../lib/todo';
+import { Todo } from '../lib/todo';
 import { TodosList } from './todoslist';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
@@ -96,7 +96,7 @@ export const TodosView = (props: TodosViewProps) => {
   };
   const handleEdit = (todoText: string | null) => {
     if (confirmEdit && todoText !== null && todoText !== '') {
-      const newTodo = parseTodo(todoText, confirmEdit.id);
+      const newTodo = Todo.parse(todoText, confirmEdit.id);
       const newTodos = todos.map((todo) =>
         todo.id === confirmEdit.id ? newTodo : todo,
       );
@@ -107,7 +107,7 @@ export const TodosView = (props: TodosViewProps) => {
   const handleAdd = (todoText: string | null) => {
     if (todoText !== null && todoText !== '') {
       // Parse the todo
-      const todo = parseTodo(todoText, todos.length);
+      const todo = Todo.parse(todoText, todos.length);
       todo.createDate = new Date().toISOString().substring(0, 10);
       // Add the new todo to the todoList
       const newTodos = [...todos, todo];
@@ -179,7 +179,7 @@ export const TodosView = (props: TodosViewProps) => {
       {confirmEdit && (
         <EditTodoDialog
           onEdit={handleEdit}
-          todoText={confirmEdit ? stringifyTodo(confirmEdit) : ''}
+          todoText={confirmEdit ? confirmEdit.toString() : ''}
         />
       )}
     </div>

@@ -16,7 +16,10 @@ const TODO_RE = RegExp(
 );
 
 export class TodoTag {
-  constructor(public key: string, public value: string) {}
+  constructor(
+    public key: string,
+    public value: string,
+  ) {}
   clone() {
     return new TodoTag(this.key, this.value);
   }
@@ -249,24 +252,30 @@ export function sortTodo(a: Todo, b: Todo) {
 function extractTags(description: string) {
   // Don't use \w here for better unicode support
   // Per the todo.txt spec (https://github.com/todotxt/todo.txt), context/projects are preceded by a space
+  // Would like to use lookbehind assertion /(?<=\s)\+\S+/ but that isn't available on iOS (until 16.4 (Released 2023-03-27))
   return {
-    projects: matchAll(description, /(?<=\s)\+\S+/g),
-    ctx: matchAll(description, /(?<=\s)@\S+/g),
+    projects: matchAll(description, /\s\+\S+/g),
+    ctx: matchAll(description, /\s@\S+/g),
     tags: matchTags(description),
     description: description.replace(/\s+([@+]|\S+:)\S+/g, ''),
   };
 }
 
 function matchAll(s: string, re: RegExp) {
-  const results = [...s.matchAll(re)];
-  return results.map((r) => r[0]);
+  const results = s.match(re);
+  return results || [];
 }
 
+// Would like to use string.prototype.matchAll but not available on iOS (until 13 (Released 2019-09-19))
 function matchTags(s: string) {
-  const results = [...s.matchAll(/(?<=\s)(\S+):(\S+)/g)];
-  return results.map((r) => {
-    return new TodoTag(r[1], r[2]);
-  });
+  const re = /\s(\S+):(\S+)/g;
+  const tags: TodoTag[] = [];
+  let result;
+  while ((result = re.exec(s)) !== null) {
+    tags.push(new TodoTag(result[1], result[2]));
+  }
+
+  return tags;
 }
 
 function getDuration(n: number, datePart: string) {

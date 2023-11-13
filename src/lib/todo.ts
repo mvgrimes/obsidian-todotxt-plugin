@@ -254,21 +254,21 @@ function extractTags(description: string) {
   // Per the todo.txt spec (https://github.com/todotxt/todo.txt), context/projects are preceded by a space
   // Would like to use lookbehind assertion /(?<=\s)\+\S+/ but that isn't available on iOS (until 16.4 (Released 2023-03-27))
   return {
-    projects: matchAll(description, /\s\+\S+/g),
-    ctx: matchAll(description, /\s@\S+/g),
+    projects: matchAll(description, /(?:^|\s)\+\S+/g),
+    ctx: matchAll(description, /(?:^|\s)@\S+/g),
     tags: matchTags(description),
-    description: description.replace(/\s+([@+]|\S+:)\S+/g, ''),
+    description: description.replace(/(?:^|\s)([@+]|\S+:)\S+/g, ''),
   };
 }
 
 function matchAll(s: string, re: RegExp) {
-  const results = s.match(re);
-  return results || [];
+  const results = s.match(re) || [];
+  return results.filter((item) => item).map((item) => item.trim());
 }
 
 // Would like to use string.prototype.matchAll but not available on iOS (until 13 (Released 2019-09-19))
 function matchTags(s: string) {
-  const re = /\s(\S+):(\S+)/g;
+  const re = /(?:^|\s)(\S+):(\S+)/g;
   const tags: TodoTag[] = [];
   let result;
   while ((result = re.exec(s)) !== null) {

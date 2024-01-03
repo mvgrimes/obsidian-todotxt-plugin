@@ -8,6 +8,7 @@ type TodosListProps = {
   onCompleteToggle: (t: Todo) => void;
   onDeleteClicked: (t: Todo) => void;
   onEditClicked: (t: Todo) => void;
+  onNavigate: (url: string, newTab: boolean) => void;
 };
 
 export const TodosList = (props: TodosListProps) => {
@@ -34,6 +35,7 @@ export const TodosList = (props: TodosListProps) => {
           onDeleteClicked={props.onDeleteClicked}
           onEditClicked={props.onEditClicked}
           onKeyPressed={handleKeyPress}
+          onNavigate={props.onNavigate}
           key={todo.id}
         />
       ))}

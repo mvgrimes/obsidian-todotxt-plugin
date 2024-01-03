@@ -13,6 +13,7 @@ type TodosViewProps = {
   defaultOrganizeBy: 'project' | 'context';
   preservePriority: boolean;
   recurringTasks: boolean;
+  onNavigate: (url: string, newTab: boolean) => void;
 };
 type OrganizeBy = 'project' | 'context';
 
@@ -176,6 +177,7 @@ export const TodosView = (props: TodosViewProps) => {
               onCompleteToggle={handleCompleteToggle}
               onDeleteClicked={handleShowDelete}
               onEditClicked={handleShowEdit}
+              onNavigate={props.onNavigate}
             />
           </section>
         ))}

@@ -11,6 +11,7 @@ type TodoViewProps = {
   onDeleteClicked: (t: Todo) => void;
   onEditClicked: (t: Todo) => void;
   onKeyPressed: (e: React.KeyboardEvent<HTMLInputElement>, t: Todo) => void;
+  onNavigate: (url: string, newTab: boolean) => void;
 };
 export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
@@ -43,7 +44,10 @@ export const TodoView = (props: TodoViewProps) => {
                 todo.preThreshold() ? 'todo-prethreshold' : '',
               )}
             >
-              {todo.description}
+              <TodoDescription
+                description={todo.description}
+                onNavigate={props.onNavigate}
+              />
             </span>
             {todo.tags.map((tag, i) => (
               <TodoTagView tag={tag} key={i} />
@@ -103,6 +107,39 @@ const TodoTagView = ({ tag }: { tag: TodoTag }) => {
   return (
     <span className={classes.join(' ')}>
       {tag.key}:{tag.value}
+    </span>
+  );
+};
+
+const DESC_RE = /(\[\[[^\]]+\]\])/g;
+
+const TodoDescription = ({
+  description,
+  onNavigate,
+}: {
+  description: string;
+  onNavigate: (url: string, newTab: boolean) => void;
+}) => {
+  const parts = description.split(DESC_RE);
+  console.log(description, parts);
+
+  return (
+    <span>
+      {parts.map((part) => {
+        const url = part.match(/^\[\[(.*)\]\]$/);
+        if (url)
+          return (
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate(url[1], true);
+              }}
+            >
+              {url[1]}
+            </a>
+          );
+        return <>{part}</>;
+      })}
     </span>
   );
 };

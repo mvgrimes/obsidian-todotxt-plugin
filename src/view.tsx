@@ -59,6 +59,11 @@ export class TodotxtView extends TextFileView {
     this.requestSave();
   }
 
+  handleNavigate(url: string, newTab: boolean) {
+    const callingFilePath = ''; // TODO: this must be available in `this`
+    this.plugin.app.workspace.openLinkText(url, callingFilePath, newTab);
+  }
+
   refresh() {
     const settings = this.plugin?.settings;
 
@@ -70,6 +75,7 @@ export class TodotxtView extends TextFileView {
         defaultOrganizeBy={settings?.defaultOrganizeBy || 'project'}
         preservePriority={settings?.preservePriority ?? true}
         recurringTasks={settings?.recurringTasks ?? false}
+        onNavigate={this.handleNavigate.bind(this)}
       />,
     );
   }

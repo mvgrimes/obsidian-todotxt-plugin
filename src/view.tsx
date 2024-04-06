@@ -21,7 +21,7 @@ export class TodotxtView extends TextFileView {
   // Convert from Todo[] to string before writing to disk
   getViewData() {
     const lineSep = this.fileFormat === 'dos' ? '\r\n' : '\n';
-    return this.todoData.map((t) => t.toString()).join(lineSep);
+    return this.todoData.map((t) => t.toString()).join(lineSep) + lineSep;
   }
 
   // Convert string from disk to Todo[]

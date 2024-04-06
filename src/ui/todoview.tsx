@@ -125,7 +125,7 @@ const TodoDescription = ({
 
   return (
     <span>
-      {parts.map((part) => {
+      {parts.map((part, i) => {
         const url = part.match(/^\[\[(.*)\]\]$/);
         if (url)
           return (
@@ -134,11 +134,12 @@ const TodoDescription = ({
                 e.preventDefault();
                 onNavigate(url[1], true);
               }}
+              key={i}
             >
               {url[1]}
             </a>
           );
-        return <>{part}</>;
+        return <React.Fragment key={i}>{part}</React.Fragment>;
       })}
     </span>
   );

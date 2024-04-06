@@ -257,7 +257,7 @@ function extractTags(description: string) {
     projects: matchAll(description, /(?:^|\s)\+\S+/g),
     ctx: matchAll(description, /(?:^|\s)@\S+/g),
     tags: matchTags(description),
-    description: description.replace(/(?:^|\s)([@+]|\S+:)\S+/g, ''),
+    description: description.replace(/(?:^|\s)([@+]|\w\S*:)\S+/g, ''),
   };
 }
 
@@ -268,7 +268,7 @@ function matchAll(s: string, re: RegExp) {
 
 // Would like to use string.prototype.matchAll but not available on iOS (until 13 (Released 2019-09-19))
 function matchTags(s: string) {
-  const re = /(?:^|\s)(\S+):(\S+)/g;
+  const re = /(?:^|\s)(\w\S*):(\S+)/g; // Must start with a word character (not bracket)
   const tags: TodoTag[] = [];
   let result;
   while ((result = re.exec(s)) !== null) {

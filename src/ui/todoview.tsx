@@ -111,7 +111,9 @@ const TodoTagView = ({ tag }: { tag: TodoTag }) => {
   );
 };
 
-const DESC_RE = /(\[\[[^\]]+\]\])/g;
+// const DESC_RE = /(\[\[[^\]]+\]\])/g;
+// const DESC_RE = /(\[[^\]]+\]\([^\)]+\))/g;
+const DESC_RE = /(\[\[[^\]]+\]\]|\[[^\]]+\]\([^\)]+\))/g;
 
 const TodoDescription = ({
   description,
@@ -121,12 +123,11 @@ const TodoDescription = ({
   onNavigate: (url: string, newTab: boolean) => void;
 }) => {
   const parts = description.split(DESC_RE);
-  console.log(description, parts);
 
   return (
     <span>
       {parts.map((part, i) => {
-        const url = part.match(/^\[\[(.*)\]\]$/);
+        const url = part.match(/^\[\[([^\]]+)\]\]$/);
         if (url)
           return (
             <a
@@ -137,6 +138,13 @@ const TodoDescription = ({
               key={i}
             >
               {url[1]}
+            </a>
+          );
+        const xurl = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (xurl)
+          return (
+            <a href={xurl[2]} key={i}>
+              {xurl[1]}
             </a>
           );
         return <React.Fragment key={i}>{part}</React.Fragment>;

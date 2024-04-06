@@ -282,12 +282,12 @@ function getDuration(n: number, datePart: string) {
   return datePart === 'd'
     ? Duration.fromObject({ days: n })
     : datePart === 'b'
-    ? Duration.fromObject({ days: n })
-    : datePart === 'w'
-    ? Duration.fromObject({ weeks: n })
-    : datePart === 'm'
-    ? Duration.fromObject({ months: n })
-    : datePart === 'y'
-    ? Duration.fromObject({ years: n })
-    : null;
+      ? Duration.fromObject({ days: n })
+      : datePart === 'w'
+        ? Duration.fromObject({ weeks: n })
+        : datePart === 'm'
+          ? Duration.fromObject({ months: n })
+          : datePart === 'y'
+            ? Duration.fromObject({ years: n })
+            : null;
 }

@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  useState,
-  KeyboardEvent,
-  MouseEvent,
-  ChangeEvent,
-} from 'react';
+import { useState, KeyboardEvent, MouseEvent, ChangeEvent } from 'react';
 
 interface CreateTodoProps {
   onAdd: (t: string | null) => void;

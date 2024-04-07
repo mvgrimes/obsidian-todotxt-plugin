@@ -2,6 +2,9 @@ import * as React from 'react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { Todo } from '../lib/todo';
 import { TodosList } from './todoslist';
+import PlusIcon from './icon/plus';
+import XMarkIcon from './icon/x-mark';
+import MagnifyingGlassIcon from './icon/magnifying-glass';
 import { EditTodoDialog } from './edit-todo-dialog';
 import { DeleteTodoDialog } from './delete-todo-dialog';
 import { CreateTodoDialog } from './create-todo-dialog';
@@ -18,7 +21,8 @@ type TodosViewProps = {
 type OrganizeBy = 'project' | 'context';
 
 export const TodosView = (props: TodosViewProps) => {
-  const { todos } = props;
+  const [todos, setTodos] = useState(props.todos);
+  const [filter, setFilter] = useState('' as string);
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Todo | null>(null);
@@ -77,7 +81,7 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Todo CrUD:
   const handleCompleteToggle = (t: Todo) => {
-    const newTodos = [...todos];
+    const newTodos = [...props.todos];
     const todo = newTodos.find((todo) => todo.id === t.id) as Todo;
     if (!todo) return;
 
@@ -133,6 +137,24 @@ export const TodosView = (props: TodosViewProps) => {
     }
   };
 
+  // Filter the todo list
+  const handleFilter = (e: FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    setFilter(value);
+    if (value !== '') {
+      const filteredTodos = props.todos.filter((todo) =>
+        todo.description.toLowerCase().includes(value.toLowerCase()),
+      );
+      setTodos(filteredTodos);
+    } else {
+      setTodos(props.todos);
+    }
+  };
+  const handleClear = () => {
+    setFilter('');
+    setTodos(props.todos);
+  };
+
   // Display the dialog
   const handleShowCreate = () => setConfirmCreate(true);
   const handleShowEdit = (t: Todo | null) => setConfirmEdit(t);
@@ -143,7 +165,7 @@ export const TodosView = (props: TodosViewProps) => {
       <div className="todo-container">
         <h2 className="">ToDo Lists</h2>
         <div className="todo-controls">
-          <label htmlFor="priority-selector">Filter Priority</label>
+          {/*<label htmlFor="priority-selector">Priority</label>*/}
           <select
             id="priority-selector"
             onChange={handleChangePriorityFilter}
@@ -155,7 +177,7 @@ export const TodosView = (props: TodosViewProps) => {
             <option value="D">D</option>
             <option value="Z">All</option>
           </select>
-          <label htmlFor="organizeby-selector">View By</label>
+          {/*<label htmlFor="organizeby-selector">Group</label>*/}
           <select
             id="organizeby-selector"
             onChange={handleOrganizeBy}
@@ -164,7 +186,22 @@ export const TodosView = (props: TodosViewProps) => {
             <option value="project">Project</option>
             <option value="context">Context</option>
           </select>
-          <button onClick={handleShowCreate}>New ToDo</button>
+          <div className="todo-filter">
+            <input
+              type="text"
+              placeholder=""
+              value={filter}
+              onChange={handleFilter}
+            />
+            <button className="icon-container" onClick={handleClear}>
+              {filter === '' ? (
+                <MagnifyingGlassIcon className="icon" aria-hidden="true" />
+              ) : (
+                <XMarkIcon className="icon" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+          <button onClick={handleShowCreate}>{/*<PlusIcon />*/}+</button>
         </div>
       </div>
       <div className="todo-list-container">

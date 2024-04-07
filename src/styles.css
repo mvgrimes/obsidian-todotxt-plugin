@@ -47,6 +47,39 @@
     gap: 0.75rem;
   }
 
+  .todo-filter {
+    position: relative;
+
+    input {
+      display: block;
+      width: 5em;
+    }
+    input:focus {
+      width: 10em;
+    }
+    input::placeholder {
+      color: var(--text-muted);
+    }
+    .icon-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0.5rem;
+    }
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      color: var(--text-muted);
+    }
+    button {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+  }
+
   .todo {
     input[type="checkbox"] {
       margin-top: 0.125rem;

@@ -21,7 +21,6 @@ type TodosViewProps = {
 type OrganizeBy = 'project' | 'context';
 
 export const TodosView = (props: TodosViewProps) => {
-  const [todos, setTodos] = useState(props.todos);
   const [filter, setFilter] = useState('' as string);
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
@@ -34,13 +33,26 @@ export const TodosView = (props: TodosViewProps) => {
   // Get all the projects/ctx, plus add a Default tag for untagged todos
   const todoTags =
     organizeBy === 'project'
-      ? ['+Default', ...uniq(todos.flatMap((todo) => todo.projects).sort(cmp))]
-      : ['@Default', ...uniq(todos.flatMap((todo) => todo.ctx).sort(cmp))];
+      ? [
+          '+Default',
+          ...uniq(props.todos.flatMap((todo) => todo.projects).sort(cmp)),
+        ]
+      : [
+          '@Default',
+          ...uniq(props.todos.flatMap((todo) => todo.ctx).sort(cmp)),
+        ];
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
     todoTags.map((tag) => [tag, [] as Todo[]]),
   );
+
+  const todos =
+    filter === ''
+      ? props.todos
+      : props.todos.filter((todo) =>
+          todo.description.toLowerCase().includes(filter.toLowerCase()),
+        );
 
   // ... and populate them
   todos.forEach((todo) => {
@@ -74,7 +86,7 @@ export const TodosView = (props: TodosViewProps) => {
     setMinPriority(e.currentTarget.value);
   };
 
-  // Organize by
+  // Organize by:
   const handleOrganizeBy = (e: FormEvent<HTMLSelectElement>) => {
     setOrganizeBy(e.currentTarget.value === 'project' ? 'project' : 'context');
   };
@@ -138,22 +150,9 @@ export const TodosView = (props: TodosViewProps) => {
   };
 
   // Filter the todo list
-  const handleFilter = (e: FormEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    setFilter(value);
-    if (value !== '') {
-      const filteredTodos = props.todos.filter((todo) =>
-        todo.description.toLowerCase().includes(value.toLowerCase()),
-      );
-      setTodos(filteredTodos);
-    } else {
-      setTodos(props.todos);
-    }
-  };
-  const handleClear = () => {
-    setFilter('');
-    setTodos(props.todos);
-  };
+  const handleFilter = (e: FormEvent<HTMLInputElement>) =>
+    setFilter(e.currentTarget.value || '');
+  const handleClear = () => setFilter('');
 
   // Display the dialog
   const handleShowCreate = () => setConfirmCreate(true);

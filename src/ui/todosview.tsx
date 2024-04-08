@@ -14,6 +14,7 @@ type TodosViewProps = {
   onChange: (t: Todo[]) => void;
   defaultPriorityFilter: string;
   defaultOrganizeBy: 'project' | 'context';
+  defaultGroupBy: string;
   preservePriority: boolean;
   recurringTasks: boolean;
   onNavigate: (url: string, newTab: boolean) => void;
@@ -35,7 +36,7 @@ export const TodosView = (props: TodosViewProps) => {
   const todoTags =
     organizeBy === 'project'
       ? [
-          '+Default',
+          props.defaultGroupBy,
           ...uniq(
             props.todos
               .flatMap((todo) => todo.getProjects().map((i) => i.project))
@@ -43,7 +44,7 @@ export const TodosView = (props: TodosViewProps) => {
           ),
         ]
       : [
-          '@Default',
+          props.defaultGroupBy,
           ...uniq(
             props.todos
               .flatMap((todo) => todo.getContexts().map((i) => i.ctx))
@@ -77,8 +78,8 @@ export const TodosView = (props: TodosViewProps) => {
           todoLists[prj].push(todo);
         });
       } else {
-        todoLists['+Default'] ||= [];
-        todoLists['+Default'].push(todo);
+        todoLists[props.defaultGroupBy] ||= [];
+        todoLists[props.defaultGroupBy].push(todo);
       }
     } else {
       if (todo.getContexts().length > 0) {
@@ -87,8 +88,8 @@ export const TodosView = (props: TodosViewProps) => {
           todoLists[ctx].push(todo);
         });
       } else {
-        todoLists['@Default'] ||= [];
-        todoLists['@Default'].push(todo);
+        todoLists[props.defaultGroupBy] ||= [];
+        todoLists[props.defaultGroupBy].push(todo);
       }
     }
   });

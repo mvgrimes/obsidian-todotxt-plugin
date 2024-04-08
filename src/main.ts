@@ -12,6 +12,7 @@ interface TodotxtPluginSettings {
   defaultPriorityFilter: string;
   defaultOrganizeBy: 'project' | 'context';
   defaultTodotxt: string;
+  defaultGroupBy: string;
   additionalExts: string[];
   recurringTasks: boolean;
   preservePriority: boolean;
@@ -21,6 +22,7 @@ const DEFAULT_SETTINGS: TodotxtPluginSettings = {
   defaultPriorityFilter: 'B',
   defaultOrganizeBy: 'project',
   defaultTodotxt: 'default',
+  defaultGroupBy: 'Default',
   additionalExts: [],
   recurringTasks: false,
   preservePriority: true,
@@ -156,6 +158,22 @@ class TodoSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.defaultOrganizeBy =
               value === 'project' ? 'project' : 'context';
+            await this.plugin.saveSettings();
+          }),
+      );
+
+    new Setting(settingsDiv)
+      .setName('Name for the default project/context')
+      .setDesc(
+        'If no project/context is specified for a Todo, it will be listed under this list. ' +
+          'The todotxt file will need to be reloaded in order to see the changes.',
+      )
+      .addText((text) =>
+        text
+          .setValue(this.plugin.settings.defaultGroupBy)
+          .onChange(async (value) => {
+            this.plugin.settings.defaultGroupBy =
+              value.replace(/[ \t]/g, '') || 'Default';
             await this.plugin.saveSettings();
           }),
       );

@@ -73,6 +73,7 @@ export class TodotxtView extends TextFileView {
         onChange={this.update.bind(this)}
         defaultPriorityFilter={settings?.defaultPriorityFilter || 'B'}
         defaultOrganizeBy={settings?.defaultOrganizeBy || 'project'}
+        defaultGroupBy={settings?.defaultGroupBy || 'Default'}
         preservePriority={settings?.preservePriority ?? true}
         recurringTasks={settings?.recurringTasks ?? false}
         onNavigate={this.handleNavigate.bind(this)}

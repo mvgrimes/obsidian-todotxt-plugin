@@ -180,7 +180,7 @@
   #todotxt .todo-tag {
     font-size: 0.75rem;
     line-height: 1rem;
-    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     color: var(--text-muted);
     display: inline-block;
   }
@@ -188,7 +188,7 @@
   #todotxt .todo-project {
     font-size: 0.75rem;
     line-height: 1rem;
-    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     padding: 0.125rem 0.25rem;
     border-radius: 9999px;
     color: var(--todotxt-color-gray-700);
@@ -200,7 +200,7 @@
   #todotxt .todo-ctx {
     font-size: 0.75rem;
     line-height: 1rem;
-    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     padding: 0.125rem 0.25rem;
     border-radius: 9999px;
     color: var(--todotxt-color-gray-700);

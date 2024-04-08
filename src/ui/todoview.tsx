@@ -1,7 +1,16 @@
 import * as React from 'react';
 import PencilIcon from './icon/pencil';
 import TrashIcon from './icon/trash';
-import type { Todo, TodoTag } from '../lib/todo';
+import {
+  TodoWord,
+  Todo,
+  TodoCtx,
+  TodoDescription,
+  TodoExternalLink,
+  TodoInternalLink,
+  TodoProject,
+  TodoTag,
+} from '../lib/todo';
 import cn from '../lib/classNames';
 
 type TodoViewProps = {
@@ -37,35 +46,17 @@ export const TodoView = (props: TodoViewProps) => {
         {/* <span>{todo.completedDate}</span> */}
         {/* <span>{todo.createDate}</span> */}
         <span className="todo-description">
-          <span>
-            <span
-              className={cn(
-                todo.completed ? 'todo-completed' : '',
-                todo.preThreshold() ? 'todo-prethreshold' : '',
-              )}
-            >
-              <TodoDescription
-                description={todo.description}
-                onNavigate={props.onNavigate}
-              />
-            </span>
-            {todo.tags.map((tag, i) => (
-              <TodoTagView tag={tag} key={i} />
-            ))}
-            {todo.projects
-              .filter((tag) => tag !== props.tag)
-              .map((tag, i) => (
-                <span className="todo-project" key={tag + i}>
-                  {tag}
-                </span>
-              ))}
-            {todo.ctx
-              .filter((ctx) => ctx !== props.tag)
-              .map((ctx, i) => (
-                <span className="todo-ctx" key={ctx + i}>
-                  {ctx}
-                </span>
-              ))}
+          <span
+            className={cn(
+              todo.completed ? 'todo-completed' : '',
+              todo.preThreshold() ? 'todo-prethreshold' : '',
+            )}
+          >
+            <TodoDescriptionView
+              description={todo.description}
+              onNavigate={props.onNavigate}
+              group={props.tag}
+            />
           </span>
           <span className="todo-actions">
             <button
@@ -93,7 +84,7 @@ const TodoTagView = ({ tag }: { tag: TodoTag }) => {
   const classes = ['todo-tag'];
 
   // Highlight late or pending tasks
-  if (tag.key === 'due') {
+  if (tag.tag === 'due') {
     const due = tag.value;
     if (due > SOON) {
       classes.push('todo-due');
@@ -106,48 +97,96 @@ const TodoTagView = ({ tag }: { tag: TodoTag }) => {
 
   return (
     <span className={classes.join(' ')}>
-      {tag.key}:{tag.value}
+      {tag.tag}:{tag.value}
     </span>
   );
 };
 
-// const DESC_RE = /(\[\[[^\]]+\]\])/g;
-// const DESC_RE = /(\[[^\]]+\]\([^\)]+\))/g;
-const DESC_RE = /(\[\[[^\]]+\]\]|\[[^\]]+\]\([^\)]+\))/g;
+const TodoProjectView = ({ project }: { project: TodoProject }) => {
+  return <span className="todo-project">{project.project}</span>;
+};
 
-const TodoDescription = ({
-  description,
+const TodoContextView = ({ ctx }: { ctx: TodoCtx }) => {
+  return <span className="todo-ctx">{ctx.ctx}</span>;
+};
+
+const TodoInternalLinkView = ({
+  link,
   onNavigate,
 }: {
-  description: string;
+  link: TodoInternalLink;
   onNavigate: (url: string, newTab: boolean) => void;
 }) => {
-  const parts = description.split(DESC_RE);
+  return (
+    <>
+      <a
+        onClick={(e) => {
+          e.preventDefault();
+          onNavigate(link.title, true);
+        }}
+      >
+        {link.title}
+      </a>{' '}
+    </>
+  );
+};
 
+const TodoExternalLinkView = ({
+  link,
+  onNavigate,
+}: {
+  link: TodoExternalLink;
+  onNavigate: (url: string, newTab: boolean) => void;
+}) => {
+  return (
+    <>
+      <a href={link.url}>{link.title}</a>{' '}
+    </>
+  );
+};
+
+// {todo.projects
+//   .filter((tag) => tag !== props.tag)
+//   .map((tag, i) => (
+//     <span className="todo-project" key={tag + i}>
+//       {tag}
+//     </span>
+//   ))}
+// {todo.ctx
+//   .filter((ctx) => ctx !== props.tag)
+//   .map((ctx, i) => (
+//     <span className="todo-ctx" key={ctx + i}>
+//       {ctx}
+//     </span>
+//   ))}
+
+const TodoDescriptionView = ({
+  description,
+  onNavigate,
+  group,
+}: {
+  description: TodoDescription;
+  onNavigate: (url: string, newTab: boolean) => void;
+  group: string;
+}) => {
   return (
     <span>
-      {parts.map((part, i) => {
-        const url = part.match(/^\[\[([^\]]+)\]\]$/);
-        if (url)
+      {description.map((item, i) => {
+        if (item instanceof TodoWord) return <span key={i}>{item.word} </span>;
+        if (item instanceof TodoTag) return <TodoTagView key={i} tag={item} />;
+        if (item instanceof TodoProject && item.project !== group)
+          return <TodoProjectView key={i} project={item} />;
+        if (item instanceof TodoCtx && item.ctx !== group)
+          return <TodoContextView key={i} ctx={item} />;
+        if (item instanceof TodoInternalLink)
           return (
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                onNavigate(url[1], true);
-              }}
-              key={i}
-            >
-              {url[1]}
-            </a>
+            <TodoInternalLinkView key={i} link={item} onNavigate={onNavigate} />
           );
-        const xurl = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-        if (xurl)
+        if (item instanceof TodoExternalLink)
           return (
-            <a href={xurl[2]} key={i}>
-              {xurl[1]}
-            </a>
+            <TodoExternalLinkView key={i} link={item} onNavigate={onNavigate} />
           );
-        return <React.Fragment key={i}>{part}</React.Fragment>;
+        return null;
       })}
     </span>
   );

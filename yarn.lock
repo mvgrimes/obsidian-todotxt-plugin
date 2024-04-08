@@ -768,6 +768,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@peggyjs/from-mem@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@peggyjs/from-mem@npm:1.2.1"
+  dependencies:
+    semver: 7.6.0
+  checksum: 460ca23c686ac5383986467267830cc1fbd0f643d2f72d85720ace83af388d631fbbdac5e55be91428c14bf6f3bef490c257c776a8cbc6e9ca4c0e29a3606d55
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -1669,6 +1678,13 @@ __metadata:
   bin:
     color-support: bin.js
   checksum: 9b7356817670b9a13a26ca5af1c21615463b500783b739b7634a0c2047c16cef4b2865d7576875c31c3cddf9dd621fa19285e628f20198b233a5cfdda6d0793b
+  languageName: node
+  linkType: hard
+
+"commander@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "commander@npm:12.0.0"
+  checksum: bce9e243dc008baba6b8d923f95b251ad115e6e7551a15838d7568abebcca0fc832da1800cf37caf37852f35ce4b7fb794ba7a4824b88c5adb1395f9268642df
   languageName: node
   linkType: hard
 
@@ -3804,6 +3820,7 @@ __metadata:
     luxon: ^3.4.2
     nodemon: ^2.0.20
     obsidian: latest
+    peggy: ^4.0.2
     postcss: ^8.4.20
     postcss-cli: ^10.1.0
     postcss-import: ^15.1.0
@@ -3954,6 +3971,19 @@ obsidian@latest:
   dependencies:
     through: ~2.3
   checksum: 3c4a14052a638b92e0c96eb00c0d7977df7f79ea28395250c525d197f1fc02d34ce1165d5362e2e6ebbb251524b94a76f3f0d4abc39ab8b016d97449fe15583c
+  languageName: node
+  linkType: hard
+
+"peggy@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "peggy@npm:4.0.2"
+  dependencies:
+    "@peggyjs/from-mem": 1.2.1
+    commander: ^12.0.0
+    source-map-generator: 0.8.0
+  bin:
+    peggy: bin/peggy.js
+  checksum: a0921f51ba0979e696c07ec3a17ff930ab1d068a7e3d0afa5261223e314286f0febf2c3252b45eaf6d14d660ca3ffec88f121eff43d39747ab2303b89b659930
   languageName: node
   linkType: hard
 
@@ -4340,6 +4370,17 @@ obsidian@latest:
   languageName: node
   linkType: hard
 
+"semver@npm:7.6.0":
+  version: 7.6.0
+  resolution: "semver@npm:7.6.0"
+  dependencies:
+    lru-cache: ^6.0.0
+  bin:
+    semver: bin/semver.js
+  checksum: 7427f05b70786c696640edc29fdd4bc33b2acf3bbe1740b955029044f80575fc664e1a512e4113c3af21e767154a94b4aa214bf6cd6e42a1f6dba5914e0b208c
+  languageName: node
+  linkType: hard
+
 "semver@npm:^5.7.1":
   version: 5.7.2
   resolution: "semver@npm:5.7.2"
@@ -4477,6 +4518,13 @@ obsidian@latest:
     ip: ^2.0.0
     smart-buffer: ^4.2.0
   checksum: 259d9e3e8e1c9809a7f5c32238c3d4d2a36b39b83851d0f573bfde5f21c4b1288417ce1af06af1452569cd1eb0841169afd4998f0e04ba04656f6b7f0e46d748
+  languageName: node
+  linkType: hard
+
+"source-map-generator@npm:0.8.0":
+  version: 0.8.0
+  resolution: "source-map-generator@npm:0.8.0"
+  checksum: 15e7854c04a4b1bc8a477664a65c58316d792fb24a7b427219ac597eed7f57a3905637c783126b123cf05f9d4fdc45a8fadb8bc2fbf010a82d92e35c193aba51
   languageName: node
   linkType: hard
 

@@ -35,11 +35,19 @@ export const TodosView = (props: TodosViewProps) => {
     organizeBy === 'project'
       ? [
           '+Default',
-          ...uniq(props.todos.flatMap((todo) => todo.projects).sort(cmp)),
+          ...uniq(
+            props.todos
+              .flatMap((todo) => todo.getProjects().map((i) => i.project))
+              .sort(cmp),
+          ),
         ]
       : [
           '@Default',
-          ...uniq(props.todos.flatMap((todo) => todo.ctx).sort(cmp)),
+          ...uniq(
+            props.todos
+              .flatMap((todo) => todo.getContexts().map((i) => i.ctx))
+              .sort(cmp),
+          ),
         ];
 
   // Create a list of each tag...
@@ -51,7 +59,10 @@ export const TodosView = (props: TodosViewProps) => {
     filter === ''
       ? props.todos
       : props.todos.filter((todo) =>
-          todo.description.toLowerCase().includes(filter.toLowerCase()),
+          todo.description
+            .toString()
+            .toLowerCase()
+            .includes(filter.toLowerCase()),
         );
 
   // ... and populate them
@@ -59,18 +70,18 @@ export const TodosView = (props: TodosViewProps) => {
     if ((todo.priority || 'Z') > minPriority) return;
 
     if (organizeBy === 'project') {
-      if (todo.projects.length > 0) {
-        uniq(todo.projects).forEach((tag) => {
-          todoLists[tag] ||= [];
-          todoLists[tag].push(todo);
+      if (todo.getProjects().length > 0) {
+        uniq(todo.getProjects().map((i) => i.project)).forEach((prj) => {
+          todoLists[prj] ||= [];
+          todoLists[prj].push(todo);
         });
       } else {
         todoLists['+Default'] ||= [];
         todoLists['+Default'].push(todo);
       }
     } else {
-      if (todo.ctx.length > 0) {
-        uniq(todo.ctx).forEach((ctx) => {
+      if (todo.getContexts().length > 0) {
+        uniq(todo.getContexts().map((i) => i.ctx)).forEach((ctx) => {
           todoLists[ctx] ||= [];
           todoLists[ctx].push(todo);
         });

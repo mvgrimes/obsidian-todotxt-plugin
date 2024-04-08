@@ -1,32 +1,104 @@
 import { DateTime, Duration } from 'luxon';
+import parser from './parser';
 
 // The pattern for a todotxt entry
 // See: https://github.com/todotxt/todo.txt
 // Examples:
 //   x 2020-11-19 2020-11-16 Pay Amex Cash Card Bill (Due Dec 11th) t:2020-11-21 +Home @Bills
 //   (B) 2020-11-17 Update Mac systems +Home
-const TODO_RE = RegExp(
-  '^' +
-    '((?<completed>x) )?' +
-    '(\\((?<priority>[A-Z])\\) )?' +
-    '((?<firstDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?' +
-    '((?<secondDate>[0-9]{4}-[0-9]{2}-[0-9]{2}) )?' +
-    '(?<description>.*?)' +
-    '$',
-);
 
 export class TodoTag {
   constructor(
-    public key: string,
+    public tag: string,
     public value: string,
   ) {}
   clone() {
-    return new TodoTag(this.key, this.value);
+    return new TodoTag(this.tag, this.value);
   }
   toString() {
-    return `${this.key}:${this.value}`;
+    return `${this.tag}:${this.value}`;
+  }
+  toHtml() {
+    return this.toString();
   }
 }
+
+export class TodoCtx {
+  constructor(public ctx: string) {}
+  clone() {
+    return new TodoCtx(this.ctx);
+  }
+  toString() {
+    return `@${this.ctx}`;
+  }
+  toHtml() {
+    return this.toString();
+  }
+}
+
+export class TodoProject {
+  constructor(public project: string) {}
+  clone() {
+    return new TodoProject(this.project);
+  }
+  toString() {
+    return `+${this.project}`;
+  }
+  toHtml() {
+    return this.toString();
+  }
+}
+
+export class TodoExternalLink {
+  constructor(
+    public title: string,
+    public url: string,
+  ) {}
+  clone() {
+    return new TodoExternalLink(this.title, this.url);
+  }
+  toString() {
+    return `[${this.title}](${this.url})`;
+  }
+  toHtml() {
+    return `<a href="${this.url}">${this.title}</a>`;
+  }
+}
+
+export class TodoInternalLink {
+  constructor(public title: string) {}
+  clone() {
+    return new TodoInternalLink(this.title);
+  }
+  toString() {
+    return `[[${this.title}]]`;
+  }
+  toHtml() {
+    return `<a href="${this.title}">${this.title}</a>`;
+  }
+}
+
+export class TodoWord {
+  constructor(public word: string) {}
+  clone() {
+    return new TodoWord(this.word);
+  }
+  toString() {
+    return `${this.word}`;
+  }
+  toHtml() {
+    return this.toString();
+  }
+}
+
+export type TodoDescription = (
+  | TodoWord
+  | TodoProject
+  | TodoCtx
+  | TodoTag
+  | TodoInternalLink
+  | TodoExternalLink
+)[];
 
 type TodoArgs = {
   id: number;
@@ -34,10 +106,7 @@ type TodoArgs = {
   completedDate?: string;
   priority: string;
   createDate?: string;
-  description: string; // The description w/o tags
-  projects: string[];
-  ctx: string[];
-  tags: TodoTag[];
+  description: TodoDescription;
 };
 
 export class Todo {
@@ -46,10 +115,7 @@ export class Todo {
   completedDate?: string;
   priority: string;
   createDate?: string;
-  description: string;
-  projects: string[];
-  ctx: string[];
-  tags: TodoTag[];
+  description: TodoDescription;
 
   constructor(args: TodoArgs) {
     this.id = args.id;
@@ -58,35 +124,44 @@ export class Todo {
     this.priority = args.priority;
     this.createDate = args.createDate;
     this.description = args.description;
-    this.projects = args.projects;
-    this.ctx = args.ctx;
-    this.tags = args.tags;
   }
 
   static parse(line: string, id: number): Todo {
-    const result = TODO_RE.exec(line);
-    const groups = result?.groups;
-    if (groups) {
-      return new Todo({
-        id,
-        completed: !!groups.completed,
-        priority: groups.priority ?? '',
-        createDate: groups.secondDate ?? groups.firstDate,
-        completedDate: groups.secondDate ? groups.firstDate : undefined,
-        ...extractTags(groups.description),
-      });
-    } else {
-      console.error(`[TodoTxt] setViewData: cannot match todo`, line);
-      return new Todo({
-        id,
-        completed: false,
-        priority: '',
-        description: `error parsing: ${line}`,
-        projects: [],
-        ctx: [],
-        tags: [],
-      });
-    }
+    const data = parser.parse(line);
+    // console.error(`[TodoTxt] setViewData: cannot match todo`, line);
+
+    const desc = data.description.map((item: any) => {
+      if (typeof item === 'string') {
+        return new TodoWord(item);
+      }
+      if ('project' in item) {
+        return new TodoProject(item.project);
+      }
+      if ('context' in item) {
+        return new TodoCtx(item.context);
+      }
+      if ('tag' in item) {
+        return new TodoTag(item.tag, item.value);
+      }
+      if ('link' in item) {
+        return new TodoInternalLink(item.link);
+      }
+      if ('url' in item) {
+        return new TodoExternalLink(item.title, item.url);
+      }
+      throw new Error(
+        `[TodoTxt] todo.parse: unknown item type: ${JSON.stringify(item)})`,
+      );
+    });
+
+    return new Todo({
+      id,
+      completed: !!data.completed,
+      priority: data.priority ?? '',
+      createDate: data.secondDate ?? data.firstDate,
+      completedDate: data.secondDate ? data.firstDate : undefined,
+      description: desc,
+    });
   }
 
   complete(preservePriority: boolean) {
@@ -110,7 +185,9 @@ export class Todo {
       const priorityTag = this.getTag('pri');
       if (priorityTag && priorityTag.value.length === 1) {
         this.priority = priorityTag.value.toUpperCase();
-        this.tags = this.tags.filter((tag) => tag.key !== 'pri');
+        this.description = this.description.filter(
+          (item) => item instanceof TodoTag && item.tag !== 'pri',
+        );
       }
     }
   }
@@ -193,11 +270,37 @@ export class Todo {
       return;
     }
 
-    this.tags.push(new TodoTag(key, value));
+    this.description.push(new TodoTag(key, value));
   }
 
   getTag(key: string) {
-    return this.tags.find((tag) => tag.key === key);
+    return this.getTags().find((tag) => tag.tag === key);
+  }
+
+  getTags() {
+    return this.description.filter(
+      (item) => item instanceof TodoTag,
+    ) as TodoTag[];
+  }
+  getProjects() {
+    return this.description.filter(
+      (item) => item instanceof TodoProject,
+    ) as TodoProject[];
+  }
+  getContexts() {
+    return this.description.filter(
+      (item) => item instanceof TodoCtx,
+    ) as TodoCtx[];
+  }
+  getInternalLinks() {
+    return this.description.filter(
+      (item) => item instanceof TodoInternalLink,
+    ) as TodoInternalLink[];
+  }
+  getExternalLinks() {
+    return this.description.filter(
+      (item) => item instanceof TodoExternalLink,
+    ) as TodoExternalLink[];
   }
 
   // Returns a new Todo with:
@@ -205,19 +308,16 @@ export class Todo {
   // - uncompleted
   // - any pri tags stripped
   clone(id: number) {
+    const description = this.description
+      .filter((item) => !(item instanceof TodoTag && item.tag === 'pri'))
+      .map((item) => item.clone());
+
     return new Todo({
       id,
       completed: false,
       priority: this.priority,
       createDate: new Date().toISOString().substring(0, 10),
-      description: this.description,
-      projects: [...this.projects],
-      ctx: [...this.ctx],
-      tags: [
-        ...this.tags
-          .filter((tag) => tag.key !== 'pri')
-          .map((tag) => tag.clone()),
-      ],
+      description,
     });
   }
 
@@ -227,10 +327,7 @@ export class Todo {
       this.priority && !this.completed ? `(${this.priority})` : null,
       this.completedDate,
       this.createDate,
-      this.description,
-      ...this.tags.map((tag) => tag.toString()),
-      ...this.projects.map((tag) => tag.toString()),
-      ...this.ctx.map((tag) => tag.toString()),
+      this.description.map((item) => item.toString()).join(' '),
     ]
       .filter((item) => item)
       .join(' ');
@@ -246,36 +343,7 @@ export function sortTodo(a: Todo, b: Todo) {
   if (a.completed > b.completed) return 1;
   if ((a.priority || 'X') < (b.priority || 'X')) return -1;
   if ((a.priority || 'X') > (b.priority || 'X')) return 1;
-  return a.description.localeCompare(b.description);
-}
-
-function extractTags(description: string) {
-  // Don't use \w here for better unicode support
-  // Per the todo.txt spec (https://github.com/todotxt/todo.txt), context/projects are preceded by a space
-  // Would like to use lookbehind assertion /(?<=\s)\+\S+/ but that isn't available on iOS (until 16.4 (Released 2023-03-27))
-  return {
-    projects: matchAll(description, /(?:^|\s)\+\S+/g),
-    ctx: matchAll(description, /(?:^|\s)@\S+/g),
-    tags: matchTags(description),
-    description: description.replace(/(?:^|\s)([@+]|\w\S*:)\S+/g, ''),
-  };
-}
-
-function matchAll(s: string, re: RegExp) {
-  const results = s.match(re) || [];
-  return results.filter((item) => item).map((item) => item.trim());
-}
-
-// Would like to use string.prototype.matchAll but not available on iOS (until 13 (Released 2019-09-19))
-function matchTags(s: string) {
-  const re = /(?:^|\s)(\w\S*):(\S+)/g; // Must start with a word character (not bracket)
-  const tags: TodoTag[] = [];
-  let result;
-  while ((result = re.exec(s)) !== null) {
-    tags.push(new TodoTag(result[1], result[2]));
-  }
-
-  return tags;
+  return a.description.toString().localeCompare(b.description.toString());
 }
 
 function getDuration(n: number, datePart: string) {

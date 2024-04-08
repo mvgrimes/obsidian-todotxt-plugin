@@ -63,7 +63,8 @@ subtlely muted text.
 
 Use `tab` and `shift-tab` to navigate through your todos.
 
-- `n` to create a New todo task
+- `ctrl-n` to create a New todo task
+- `ctrl-/` goto filter input
 - `e` or `enter` to Edit the current todo task
 - `d` to Delete the current todo task
 - `space` toggle done

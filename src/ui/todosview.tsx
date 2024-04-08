@@ -22,6 +22,7 @@ type OrganizeBy = 'project' | 'context';
 
 export const TodosView = (props: TodosViewProps) => {
   const [filter, setFilter] = useState('' as string);
+  const filterInputRef = React.useRef<HTMLInputElement | null>(null);
   const [minPriority, setMinPriority] = useState(props.defaultPriorityFilter);
   const [confirmCreate, setConfirmCreate] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Todo | null>(null);
@@ -152,17 +153,17 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Keyboard shortcuts/navigation
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'n') {
+    if (e.key === 'n' && e.ctrlKey) {
       handleShowCreate();
-      e.preventDefault();
-    } else if (e.key === 'p') {
-      e.preventDefault();
+    } else if (e.key === '/' && e.ctrlKey) {
+      filterInputRef.current?.focus();
     }
   };
 
   // Filter the todo list
-  const handleFilter = (e: FormEvent<HTMLInputElement>) =>
+  const handleFilter = (e: FormEvent<HTMLInputElement>) => {
     setFilter(e.currentTarget.value || '');
+  };
   const handleClear = () => setFilter('');
 
   // Display the dialog
@@ -200,6 +201,7 @@ export const TodosView = (props: TodosViewProps) => {
             <input
               type="text"
               placeholder=""
+              ref={filterInputRef}
               value={filter}
               onChange={handleFilter}
             />

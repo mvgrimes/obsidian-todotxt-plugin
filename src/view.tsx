@@ -26,7 +26,7 @@ export class TodotxtView extends TextFileView {
 
   // Convert string from disk to Todo[]
   setViewData(data: string, clear: boolean) {
-    if (data.match(/\r\n/)) this.fileFormat = 'dos';
+    this.fileFormat = data.match(/\r\n/) ? 'dos' : 'unix';
 
     this.todoData = data
       .split(/\r?\n/)

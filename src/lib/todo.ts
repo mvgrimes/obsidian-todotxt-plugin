@@ -186,7 +186,7 @@ export class Todo {
       if (priorityTag && priorityTag.value.length === 1) {
         this.priority = priorityTag.value.toUpperCase();
         this.description = this.description.filter(
-          (item) => item instanceof TodoTag && item.tag !== 'pri',
+          (item) => !(item instanceof TodoTag && item.tag === 'pri'),
         );
       }
     }

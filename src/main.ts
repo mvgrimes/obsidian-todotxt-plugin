@@ -71,7 +71,7 @@ export default class TodotxtPlugin extends Plugin {
     // ribbonIconEl.addClass('my-plugin-ribbon-class');
 
     // This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-    // TODO: add a count of todos
+    // TODO: add a count of todos, fileFormat
     // const statusBarItemEl = this.addStatusBarItem();
     // statusBarItemEl.setText('Todotxt');
 

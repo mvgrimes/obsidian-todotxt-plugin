@@ -57,7 +57,7 @@ export const TodosView = (props: TodosViewProps) => {
     todoTags.map((tag) => [tag, [] as Todo[]]),
   );
 
-  const todos =
+  const displayedTodos =
     filter === ''
       ? props.todos
       : props.todos.filter((todo) =>
@@ -68,7 +68,7 @@ export const TodosView = (props: TodosViewProps) => {
         );
 
   // ... and populate them
-  todos.forEach((todo) => {
+  displayedTodos.forEach((todo) => {
     if ((todo.priority || 'Z') > minPriority) return;
 
     if (organizeBy === 'project') {
@@ -124,8 +124,10 @@ export const TodosView = (props: TodosViewProps) => {
   };
   const handleDelete = (t: boolean) => {
     if (t) {
-      const newTodos = todos.filter((todo) => todo.id !== confirmDelete?.id);
-      if (todos.length !== newTodos.length && props.onChange)
+      const newTodos = props.todos.filter(
+        (todo) => todo.id !== confirmDelete?.id,
+      );
+      if (props.todos.length !== newTodos.length && props.onChange)
         props.onChange(newTodos);
     }
     setConfirmDelete(null);
@@ -133,7 +135,7 @@ export const TodosView = (props: TodosViewProps) => {
   const handleEdit = (todoText: string | null) => {
     if (confirmEdit && todoText !== null && todoText !== '') {
       const newTodo = Todo.parse(todoText, confirmEdit.id);
-      const newTodos = todos.map((todo) =>
+      const newTodos = props.todos.map((todo) =>
         todo.id === confirmEdit.id ? newTodo : todo,
       );
       if (props.onChange) props.onChange(newTodos);
@@ -143,10 +145,10 @@ export const TodosView = (props: TodosViewProps) => {
   const handleAdd = (todoText: string | null) => {
     if (todoText !== null && todoText !== '') {
       // Parse the todo
-      const todo = Todo.parse(todoText, todos.length);
+      const todo = Todo.parse(todoText, props.todos.length);
       todo.createDate = new Date().toISOString().substring(0, 10);
       // Add the new todo to the todoList
-      const newTodos = [...todos, todo];
+      const newTodos = [...props.todos, todo];
       if (props.onChange) props.onChange(newTodos);
     }
     setConfirmCreate(false);

@@ -280,6 +280,11 @@
   margin-bottom: 0.25rem;
 }
 
+#todotxt {
+  /* Particularly on mobile, we need a bit of padding at the bottom */
+  margin-bottom: 2rem;
+}
+
 /* sm */
 
 @media (min-width: 640px) {

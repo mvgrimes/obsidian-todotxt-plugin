@@ -386,7 +386,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parsetodo() {
-    var s0, s1, s2, s3, s4, s5, s6, s7;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
     s0 = peg$currPos;
     s1 = peg$parsecompleted();
@@ -406,17 +406,21 @@ function peg$parse(input, options) {
       s4 = null;
     }
     s5 = peg$parsedescription();
-    s6 = peg$currPos;
-    peg$silentFails++;
-    s7 = peg$parseEOI();
-    peg$silentFails--;
-    if (s7 !== peg$FAILED) {
-      peg$currPos = s6;
-      s6 = undefined;
-    } else {
-      s6 = peg$FAILED;
+    s6 = peg$parsews();
+    if (s6 === peg$FAILED) {
+      s6 = null;
     }
-    if (s6 !== peg$FAILED) {
+    s7 = peg$currPos;
+    peg$silentFails++;
+    s8 = peg$parseEOI();
+    peg$silentFails--;
+    if (s8 !== peg$FAILED) {
+      peg$currPos = s7;
+      s7 = undefined;
+    } else {
+      s7 = peg$FAILED;
+    }
+    if (s7 !== peg$FAILED) {
       peg$savedPos = s0;
       s0 = peg$f0(s1, s2, s3, s4, s5);
     } else {

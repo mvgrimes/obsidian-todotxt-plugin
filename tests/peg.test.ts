@@ -69,4 +69,14 @@ describe('todo', () => {
       description: ['Test', 'parser'],
     });
   });
+
+  it('with trialing whitespace', () => {
+    expect(p('(A) test ')).toEqual({
+      completed: null,
+      priority: 'A',
+      firstDate: null,
+      secondDate: null,
+      description: ['test'],
+    });
+  });
 });

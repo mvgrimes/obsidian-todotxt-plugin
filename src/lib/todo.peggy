@@ -4,6 +4,7 @@ todo =
   firstDate:date?
   secondDate:date?
   description:description
+  trailing_ws?
   &EOI
   { return { completed: completed, priority: priority, firstDate: firstDate, secondDate: secondDate, description: description } }
 
@@ -12,6 +13,7 @@ priority  = "(" @[A-Z] ")" ws
 date      = @$( [0-9][0-9][0-9][0-9] "-" [0-9][0-9] "-" [0-9][0-9] ) ws
 
 description = part |0.., ws|
+trailing_ws = ws
 part        = tag / context / project / link / xlink / word
 word        = $chars
 tag         = key:$tagName ":" value:$chars           { return { tag: key, value: value } }

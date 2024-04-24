@@ -7,6 +7,13 @@ Manage [\*.todotxt](https://github.com/todotxt/todo.txt) files in Obsidian.
 Install the plugin and put your todo file in your Obsidian vault with the
 `.todotxt` extension (ie, `TODO.todotxt`).
 
+Creating a `.todotxt` file from within Obsidian can be a bit tricky. When you
+create a new note Obsidian will automatically append the `.md` extension, so
+`TODO.todotxt` becomes `TODO.todotxt.md`. To fix this, you can right-click on
+the file in Obsidian sidebar, select Reveal in Finder/File Explorer, and then
+change the file extension to `.todotxt`. If you are successful, the file will
+be listed in the Obsidian sidebar followed by a `TODOTXT` badge.
+
 ## Additional Features
 
 The TodoTxt Plugin supports some extensions to the basic todo.txt spec:
@@ -48,14 +55,14 @@ subtlely muted text.
 
 ## How to Install by Hand
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `yarn run dev` to start compilation in watch mode.
+1. Clone this repo.
+1. `yarn install` to install dependencies
+1. `yarn run dev` to start compilation in watch mode.
 
 ## Manually Installing the Plugin
 
-- Copy `main.js`, `styles.css`, `manifest.json` to your vault
-  `VaultFolder/.obsidian/plugins/todotxt-plugin/`.
+Copy `main.js`, `styles.css`, `manifest.json` to your vault
+`VaultFolder/.obsidian/plugins/todotxt-plugin/`.
 
     cp dist/* VaultFolder/.obsidian/plugins/todotxt-plugin/
 
@@ -71,15 +78,16 @@ Use `tab` and `shift-tab` to navigate through your todos.
 
 ## Future Development
 
-- [ ] Better handling for Todo.parse() errors
 - [x] Delete a Todo
 - [x] Edit a Todo
 - [x] Keyboard shortcut to create new Todo
+- [x] Keyboard navigation through TODOs
+- [x] Priority colors are a bit bright
+- [ ] Better handling for Todo.parse() errors
 - [ ] Global keyboard shortcut to create new Todo
 - [ ] Command palette command to create new Todo
 - [ ] Config menu set the default .todotxt file
-- [x] Keyboard navigation through TODOs
-- [x] Priority colors are a bit bright
+- [ ] Command palette to create a new .todotxt file
 
 ## Development
 
@@ -89,10 +97,12 @@ Helpful commands to run while developing:
 yarn run dev # compile typescript to ./dist via esbuild
 yarn run css # compile css to ./dist via postcss
 yarn run cp # copy files from ./dist to Obsidian plugins dir
+yarn run parser:watch # compile .peggy grammar to parser.js
+yarn run test:watch # run tests in watch mode
 ```
 
-Using the moment package b/c Obsidian already requires it. Otherwise would use
-something lighter weight (like date-fns) or built-in.
+We are using the moment package because Obsidian already requires it. Otherwise
+would use something lighter weight (like date-fns) or built-in.
 
 ## Thanks
 

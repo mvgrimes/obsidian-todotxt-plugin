@@ -31,10 +31,17 @@ jobs:
           zip -r ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip ${{ env.PLUGIN_NAME }}
           ls
 
+      - name: Create release notes
+        uses: johnyherangi/create-release-notes@main
+        id: create-release-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
-        id: create_release
+        id: create-release
         uses: softprops/action-gh-release@v1
         with:
+          body: ${{ steps.create-release-notes.outputs.release-notes }}
           files: |
             main.js
             styles.css

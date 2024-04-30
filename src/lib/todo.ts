@@ -215,7 +215,11 @@ export class Todo {
 
     const newTodo = this.clone(id);
     newTodo.setNextDueDate(!!strict, duration);
-    newTodo.setNextThresholdDate(this);
+    if (newTodo.setNextThresholdDate(this)) {
+      // If it is recurring and has a threshold, remove the priority, it will be handled by `todo promote`
+      // newTodo.setTag('pri', this.priority);
+      newTodo.priority = '';
+    }
     return newTodo;
   }
 
@@ -245,6 +249,8 @@ export class Todo {
     const due = start.plus(duration).toISODate();
     if (!due) return; // TODO: notify failed addition?
     this.setTag('due', due);
+
+    return true;
   }
 
   setNextThresholdDate(from: Todo) {
@@ -260,6 +266,8 @@ export class Todo {
     const newThreshold = newDueDate.minus(duration).toISODate();
     if (!newThreshold) return; // TODO: notify about failure?
     this.setTag('t', newThreshold);
+
+    return true;
   }
 
   // Set an existing tag to the given value. Create the tag if it doesn't exist.

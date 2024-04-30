@@ -11,6 +11,7 @@ import {
   TodoProject,
   TodoTag,
 } from '../lib/todo';
+import useLongPress from '../lib/useLongPress';
 import cn from '../lib/classNames';
 
 type TodoViewProps = {
@@ -24,17 +25,23 @@ type TodoViewProps = {
 };
 export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
+  const longPressProps = useLongPress(
+    () => props.onEditClicked(todo),
+    () => props.onCompleteToggle(todo),
+    { delay: 500 },
+  );
 
   return (
     <div className="todo">
-      <label htmlFor={`todo-${todo.id}`} className="todo-label">
-        <input
-          type="checkbox"
-          checked={todo.completed}
-          id={`todo-${todo.id}`}
-          onChange={() => props.onCompleteToggle(todo)}
-          onKeyUp={(e) => props.onKeyPressed(e, todo)}
-        />
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        id={`todo-${todo.id}`}
+        onKeyUp={(e) => props.onKeyPressed(e, todo)}
+        onChange={() => props.onCompleteToggle(todo)}
+      />
+      {/* We can't use <label htmlFor={`todo-${todo.id}`}> here because it will cause the onCompleteToggle to fire twice */}
+      <div className="todo-label" {...longPressProps}>
         <span
           className={cn(
             'todo-priority',
@@ -73,7 +80,7 @@ export const TodoView = (props: TodoViewProps) => {
             </button>
           </span>
         </span>
-      </label>
+      </div>
     </div>
   );
 };

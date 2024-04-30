@@ -95,9 +95,12 @@
     }
 
   #todotxt .todo {
+
     border: 3px solid transparent;
     border-radius: 4px;
-  }
+
+    display: flex;
+}
 
   /* .todo:has(input:focus)  { */
 

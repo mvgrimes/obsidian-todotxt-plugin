@@ -27,7 +27,7 @@ export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
   const longPressProps = useLongPress(
     () => props.onEditClicked(todo),
-    () => props.onCompleteToggle(todo),
+    () => {},
     { delay: 500 },
   );
 

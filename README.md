@@ -109,3 +109,12 @@ would use something lighter weight (like date-fns) or built-in.
 * Thanks to the authors of [todotxt](https://github.com/todotxt).
 * Thanks to the authors of [SwiftoDo](https://swiftodoapp.com/) for documenting
   the due and recurring extensions to the spec.
+
+## Support
+
+I've been asked if there are ways to support this plugin. I created it to
+scratch my own itch and am just happy that others find it useful. Giving it a
+star on github would be appreciated. If you are feeling extra generous, you can
+buy me a coffee ☕.
+
+<a href="https://www.buymeacoffee.com/mvgrimes" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>

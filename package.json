@@ -8,14 +8,14 @@
     "build": "tsc -noEmit -skipLibCheck && node ./scripts/esbuild.config.mjs production && cp manifest.json versions.json dist/ && postcss -o ./dist/styles.css ./src/styles.css",
     "css": "postcss -o ./dist/styles.css --watch ./src/styles.css",
     "cp": "bash -c 'cp dist/* $HOME/Notes/.obsidian/plugins/todotxt-plugin/'",
-    "cp:watch": "nodemon --watch ./dist --ext js,json,css --exec yarn run cp",
+    "cp:watch": "nodemon --watch ./dist --ext js,json,css --exec pnpm run cp",
     "test": "jest",
     "test:watch": "jest --watch --watchPathIgnorePatterns '^scripts/' --watchPathIgnorePatterns '^dist/'",
     "version": "node ./scripts/version-bump.mjs",
-    "release": "yarn run build && zx ./scripts/release.mjs",
-    "deploy": "yarn run release",
+    "release": "pnpm run build && zx ./scripts/release.mjs",
+    "deploy": "pnpm run release",
     "parser": "peggy -o src/lib/parser.js --format commonjs src/lib/todo.peggy",
-    "parser:watch": "nodemon --watch ./src/lib/todo.peggy --ext peggy --exec yarn run parser",
+    "parser:watch": "nodemon --watch ./src/lib/todo.peggy --ext peggy --exec pnpm run parser",
     "pretty": "prettier --write 'src/**/*.{js,ts,jsx,tsx}'"
   },
   "keywords": [],
@@ -50,6 +50,5 @@
     "luxon": "^3.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "packageManager": "yarn@3.6.3"
+  }
 }

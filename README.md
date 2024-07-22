@@ -56,8 +56,8 @@ subtlely muted text.
 ## How to Install by Hand
 
 1. Clone this repo.
-1. `yarn install` to install dependencies
-1. `yarn run dev` to start compilation in watch mode.
+1. `pnpm install` to install dependencies
+1. `pnpm run dev` to start compilation in watch mode.
 
 ## Manually Installing the Plugin
 
@@ -94,11 +94,11 @@ Use `tab` and `shift-tab` to navigate through your todos.
 Helpful commands to run while developing:
 
 ```shell
-yarn run dev # compile typescript to ./dist via esbuild
-yarn run css # compile css to ./dist via postcss
-yarn run cp # copy files from ./dist to Obsidian plugins dir
-yarn run parser:watch # compile .peggy grammar to parser.js
-yarn run test:watch # run tests in watch mode
+pnpm run dev # compile typescript to ./dist via esbuild
+pnpm run css # compile css to ./dist via postcss
+pnpm run cp # copy files from ./dist to Obsidian plugins dir
+pnpm run parser:watch # compile .peggy grammar to parser.js
+pnpm run test:watch # run tests in watch mode
 ```
 
 We are using the moment package because Obsidian already requires it. Otherwise

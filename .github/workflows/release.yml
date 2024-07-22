@@ -23,8 +23,8 @@ jobs:
       - name: Build
         id: build
         run: |
-          yarn install
-          yarn run build
+          pnpm install
+          pnpm run build
           mkdir ${{ env.PLUGIN_NAME }}
           cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
           cp dist/main.js dist/styles.css ./

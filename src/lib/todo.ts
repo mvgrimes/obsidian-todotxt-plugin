@@ -237,14 +237,16 @@ export class Todo {
   }
 
   // moment.js should only be used here (needed for the duration)
-  setNextDueDate(strict: boolean, duration: any) {
+  setNextDueDate(strict: boolean, duration: Duration<true>) {
     let start = DateTime.now();
 
     if (strict) {
       const currentDueDate = this.getDueDate();
-      if (currentDueDate) start = currentDueDate;
+      if (currentDueDate?.isValid) start = currentDueDate as DateTime<true>;
       // TODO: notify about failed due date parsing?
     }
+
+    if (!duration) return;
 
     const due = start.plus(duration).toISODate();
     if (!due) return; // TODO: notify failed addition?

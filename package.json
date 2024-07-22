@@ -43,7 +43,7 @@
     "postcss-nested": "^6.0.0",
     "ts-jest": "^29.1.1",
     "tslib": "^2.6.0",
-    "typescript": "^5.2.0",
+    "typescript": "^5.5.0",
     "zx": "^7.2.2"
   },
   "dependencies": {

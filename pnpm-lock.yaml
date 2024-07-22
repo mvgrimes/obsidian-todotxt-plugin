@@ -85,7 +85,7 @@ importers:
         specifier: ^2.6.0
         version: 2.6.3
       typescript:
-        specifier: ^5.2.0
+        specifier: ^5.5.0
         version: 5.5.3
       zx:
         specifier: ^7.2.2

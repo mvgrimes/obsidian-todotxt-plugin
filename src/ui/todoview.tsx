@@ -11,7 +11,7 @@ import {
   TodoProject,
   TodoTag,
 } from '../lib/todo';
-import useLongPress from '../lib/useLongPress';
+import { useLongPress } from '@uidotdev/usehooks';
 import cn from '../lib/classNames';
 
 type TodoViewProps = {
@@ -25,11 +25,9 @@ type TodoViewProps = {
 };
 export const TodoView = (props: TodoViewProps) => {
   const { todo } = props;
-  const longPressProps = useLongPress(
-    () => props.onEditClicked(todo),
-    () => {},
-    { delay: 500 },
-  );
+  const longPressProps = useLongPress(() => props.onEditClicked(todo), {
+    threshold: 500,
+  });
 
   return (
     <div className="todo">

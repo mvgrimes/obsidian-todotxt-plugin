@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "18.x"
 
+      - uses: pnpm/action-setup@v4
+        # make sure we have packageManager entry in package.json
+
       - name: Build
         id: build
         run: |

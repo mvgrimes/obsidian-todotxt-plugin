@@ -1,7 +1,7 @@
 {
 	"id": "todotxt",
 	"name": "TodoTxt",
-	"version": "2.1.2",
+	"version": "2.1.6",
 	"minAppVersion": "0.15.0",
 	"description": "Manage Todo.txt files.",
 	"author": "Mark Grimes",

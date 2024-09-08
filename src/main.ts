@@ -1,5 +1,8 @@
 import {
   App,
+  addIcon,
+  TFile,
+  TFolder,
   // Notice,
   Plugin,
   PluginSettingTab,
@@ -7,6 +10,8 @@ import {
   WorkspaceLeaf,
 } from 'obsidian';
 import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
+
+const newTodotxtIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-todo"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m3 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>'
 
 interface TodotxtPluginSettings {
   defaultPriorityFilter: string;
@@ -42,6 +47,8 @@ export default class TodotxtPlugin extends Plugin {
       ['todotxt', ...this.settings.additionalExts],
       VIEW_TYPE_TODOTXT,
     );
+    addIcon("create-new-todotxt",newTodotxtIcon)
+    this.registerEvents();
 
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new TodoSettingTab(this.app, this));
@@ -100,6 +107,56 @@ export default class TodotxtPlugin extends Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
   }
+
+  registerEvents() {
+    this.registerEvent(
+      this.app.workspace.on('file-menu', (menu, file, source, leaf) => {
+        if (source === 'link-context-menu') return;
+
+        const fileIsFolder = file instanceof TFolder;
+
+        // Add a menu item to the folder context menu to create a board
+        if (fileIsFolder) {
+          menu.addItem((item) => {
+            item
+              .setSection('action-primary')
+              .setTitle('New Todo txt')
+              .setIcon('create-new-todotxt')
+              .onClick(() => this.NewTodotxt(file));
+          });
+          return;
+        }
+      }))
+    }
+  private async getNewTodotxtFilePath(
+      folder :TFolder,
+      name : string,
+      extension : string
+    )
+  {
+    let filePath = `${folder.path}/${name}.${extension}`;
+    let index = 0;
+    while (await this.app.vault.adapter.exists(filePath)) {
+      filePath = `${folder.path}/${name} ${++index}.${extension}`;
+    }
+    return filePath;
+  }
+
+  async NewTodotxt(folder?: TFolder) {
+    const targetFolder = folder
+      ? folder
+      : this.app.fileManager.getNewFileParent("");
+    const newFilePath = await this.getNewTodotxtFilePath(
+      targetFolder,
+      "Todo",
+      "todotxt"
+    );
+    const file = await this.app.vault.create(newFilePath, "");
+    await this.app.workspace.getLeaf().setViewState({
+        type : VIEW_TYPE_TODOTXT,
+        state : {file : file.path}
+      })
+    }
 }
 
 // class TodoModal extends Modal {

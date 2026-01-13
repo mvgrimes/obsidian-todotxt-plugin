@@ -10,7 +10,7 @@ import { TodotxtView, VIEW_TYPE_TODOTXT } from './view';
 
 interface TodotxtPluginSettings {
   defaultPriorityFilter: string;
-  defaultOrganizeBy: 'project' | 'context';
+  defaultOrganizeBy: 'project' | 'context' | 'due_date';
   defaultTodotxt: string;
   defaultGroupBy: string;
   additionalExts: string[];
@@ -153,11 +153,11 @@ class TodoSettingTab extends PluginSettingTab {
       .setDesc('By default, only Todos will be organized in lists by these.')
       .addDropdown((dropdown) =>
         dropdown
-          .addOptions({ project: 'Project', context: 'Context' })
+          .addOptions({ project: 'Project', context: 'Context', due_date: 'Due Date' })
           .setValue(this.plugin.settings.defaultOrganizeBy)
           .onChange(async (value) => {
             this.plugin.settings.defaultOrganizeBy =
-              value === 'project' ? 'project' : 'context';
+              value === 'project' ? 'project' : value === 'context' ? 'context' : 'due_date';
             await this.plugin.saveSettings();
           }),
       );

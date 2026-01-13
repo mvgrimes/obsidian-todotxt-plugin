@@ -9,10 +9,11 @@ type TodosListProps = {
   onDeleteClicked: (t: Todo) => void;
   onEditClicked: (t: Todo) => void;
   onNavigate: (url: string, newTab: boolean) => void;
+  sort?: boolean;
 };
 
 export const TodosList = (props: TodosListProps) => {
-  const sorted = [...props.todos].sort(sortTodo);
+  const sorted = props.sort !== false ? [...props.todos].sort(sortTodo) : props.todos;
 
   const handleKeyPress = (
     e: React.KeyboardEvent<HTMLInputElement>,

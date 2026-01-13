@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
-import { Todo } from '../lib/todo';
+import { Todo, sortTodo } from '../lib/todo';
 import { TodosList } from './todoslist';
 import PlusIcon from './icon/plus';
 import XMarkIcon from './icon/x-mark';
@@ -13,13 +13,13 @@ type TodosViewProps = {
   todos: Todo[];
   onChange: (t: Todo[]) => void;
   defaultPriorityFilter: string;
-  defaultOrganizeBy: 'project' | 'context';
+  defaultOrganizeBy: 'project' | 'context' | 'due_date';
   defaultGroupBy: string;
   preservePriority: boolean;
   recurringTasks: boolean;
   onNavigate: (url: string, newTab: boolean) => void;
 };
-type OrganizeBy = 'project' | 'context';
+type OrganizeBy = 'project' | 'context' | 'due_date';
 
 export const TodosView = (props: TodosViewProps) => {
   const [filter, setFilter] = useState('' as string);
@@ -43,14 +43,16 @@ export const TodosView = (props: TodosViewProps) => {
               .sort(cmp),
           ),
         ]
-      : [
-          props.defaultGroupBy,
-          ...uniq(
-            props.todos
-              .flatMap((todo) => todo.getContexts().map((i) => i.ctx))
-              .sort(cmp),
-          ),
-        ];
+      : organizeBy === 'context'
+        ? [
+            props.defaultGroupBy,
+            ...uniq(
+              props.todos
+                .flatMap((todo) => todo.getContexts().map((i) => i.ctx))
+                .sort(cmp),
+            ),
+          ]
+        : ['Due Date'];
 
   // Create a list of each tag...
   const todoLists = Object.fromEntries(
@@ -81,7 +83,7 @@ export const TodosView = (props: TodosViewProps) => {
         todoLists[props.defaultGroupBy] ||= [];
         todoLists[props.defaultGroupBy].push(todo);
       }
-    } else {
+    } else if (organizeBy === 'context') {
       if (todo.getContexts().length > 0) {
         uniq(todo.getContexts().map((i) => i.ctx)).forEach((ctx) => {
           todoLists[ctx] ||= [];
@@ -91,8 +93,24 @@ export const TodosView = (props: TodosViewProps) => {
         todoLists[props.defaultGroupBy] ||= [];
         todoLists[props.defaultGroupBy].push(todo);
       }
+    } else if (organizeBy === 'due_date') {
+      todoLists['Due Date'].push(todo);
     }
   });
+
+  // Sort the lists
+  for (const tag of todoTags) {
+    if (organizeBy === 'due_date') {
+      todoLists[tag].sort((a, b) => {
+        const aDue = a.getDueDate();
+        const bDue = b.getDueDate();
+        if (!aDue && !bDue) return sortTodo(a, b);
+        if (!aDue) return 1;
+        if (!bDue) return -1;
+        return aDue.toMillis() - bDue.toMillis();
+      });
+    }
+  }
 
   // List filters:
   const handleChangePriorityFilter = (e: FormEvent<HTMLSelectElement>) => {
@@ -101,7 +119,8 @@ export const TodosView = (props: TodosViewProps) => {
 
   // Organize by:
   const handleOrganizeBy = (e: FormEvent<HTMLSelectElement>) => {
-    setOrganizeBy(e.currentTarget.value === 'project' ? 'project' : 'context');
+    const value = e.currentTarget.value;
+    setOrganizeBy(value === 'project' ? 'project' : value === 'context' ? 'context' : 'due_date');
   };
 
   // Todo CrUD:
@@ -199,6 +218,7 @@ export const TodosView = (props: TodosViewProps) => {
           >
             <option value="project">Project</option>
             <option value="context">Context</option>
+            <option value="due_date">Due Date</option>
           </select>
           <div className="todo-filter">
             <input
@@ -230,6 +250,7 @@ export const TodosView = (props: TodosViewProps) => {
               onDeleteClicked={handleShowDelete}
               onEditClicked={handleShowEdit}
               onNavigate={props.onNavigate}
+              sort={organizeBy !== 'due_date'}
             />
           </section>
         ))}
